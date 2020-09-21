@@ -15,7 +15,7 @@ invalid() {
 }
 
 missing() {
- if [ ! -z $1 ] && [ ! -z $2 ]; then
+ if [ ! -z $1 ] && [ -z $2 ]; then
   echo -e "$holup $1" >&2;
  fi
 }

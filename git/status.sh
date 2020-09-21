@@ -50,7 +50,7 @@ runStatusRequest() {
  if [ $changes -eq 0 ]; then
   prompt $seedling "Your branch is a delicate seedling _( $behind - $ahead )]" true;
  else
-  prompt $icon " $message with [$changes] file$(plural $changes) _( $(unstagedCount) / $(stagedCount) )]" true;
+  prompt $icon " $message with [$changes] file$(plural $changes) _($(unstagedCount)/$(stagedCount))]" true;
   spacer && git status --short;
  fi
 }

@@ -79,6 +79,11 @@ runCheckoutCreateBranchRequest() {
  local branch=$1;
  local output=$2;
 
+ if ! $(existsInFile $branch branch.txt); then
+  prompt $construction "$branch is not a valid branch prefix, enter [gbp] to display all allowed prefixes" $output;
+  return;
+ fi
+
  if $(hasChanges); then
   prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $output;
   echo false;

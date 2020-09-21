@@ -28,6 +28,11 @@ runBranchRenameRequest() {
  local name=$1;
  local output=$2;
 
+ if ! $(existsInFile $name branch.txt); then
+  prompt $construction "$name is not a valid branch prefix, enter [gbp] to display all allowed prefixes" $output;
+  return;
+ fi
+
  if $(hasBranch $1) || $(hasOrigin $1); then
   prompt $construction "Branch already exists" $output;
   echo false;
