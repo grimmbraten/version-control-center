@@ -108,7 +108,7 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- if [[ $(hasBranch $branch) || $(hasOrigin $branch) ]]; then
+ if ( $(hasBranch $branch) || $(hasOrigin $branch) ); then
   prompt $alarm "Branch already exists" $verbose;
   echo false;
   return;
