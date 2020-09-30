@@ -1,4 +1,6 @@
 merge() {
+ spacer;
+
  local flag="none";
 
  if [ -z $1 ]; then
@@ -19,9 +21,13 @@ merge() {
  fi
 
  $(runMergeRequest $1 $flag true);
+
+ spacer;
 }
 
 mergeMaster() {
+ spacer;
+
  local flag="none";
 
  if [ ! -z $1 ]; then
@@ -34,6 +40,8 @@ mergeMaster() {
  fi
 
  $(merge master $flag true);
+
+ spacer;
 }
 
 runMergeRequest() {

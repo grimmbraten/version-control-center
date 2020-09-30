@@ -1,20 +1,30 @@
 branches() {
+ spacer;
+
  if [ -z $1 ]; then
   git branch -v | cut -c 3- | awk '$3 !~/\[/ { print $1 }';
  else
   invalid "gb";
  fi
+
+ spacer;
 }
 
 branchOrigins() {
+ spacer;
+
  if [ -z $1 ]; then
   git branch -r -vv | cut -c 3- | awk '$3 !~/\[/ { print $1 }';
  else
   invalid "gbo";
  fi
+ 
+ spacer;
 }
 
 branchRename() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "What should the branch be renamed to?";
  elif [ ! -z $2 ]; then
@@ -22,6 +32,8 @@ branchRename() {
  else
   $(runBranchRenameRequest $1 true);
  fi
+
+ spacer;
 }
 
 runBranchRenameRequest() {
@@ -73,6 +85,8 @@ runBranchRenameRequest() {
 }
 
 deleteBranch() {
+ spacer;
+
  local branch=$(onBranch);
 
  if [[ "$1" = master || ( -z $1 && $branch = master ) ]]; then
@@ -82,6 +96,8 @@ deleteBranch() {
  else
   $(processDeleteBranchRequest $1 true);
  fi
+
+ spacer;
 }
 
 runDeleteBranchRequest() {
@@ -120,6 +136,8 @@ runDeleteBranchRequest() {
 }
 
 deleteBranchOrigin() {
+ spacer;
+
  local branch=$(onBranch);
 
  if [[ "$1" = master || ( -z $1 && $branch = master ) ]]; then
@@ -129,6 +147,8 @@ deleteBranchOrigin() {
  else
   $(runDeleteBranchOriginRequest $1 true);
  fi
+ 
+ spacer;
 }
 
 runDeleteBranchOriginRequest() {

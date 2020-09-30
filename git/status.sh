@@ -1,12 +1,18 @@
 status() {
+ spacer;
+
  if [ -z $1 ]; then
   runStatusRequest true;
  else
   invalid "gs";
- fi 
+ fi
+
+ spacer;
 }
 
 statusDetailed() {
+ spacer;
+
  local ahead;
  local behind;
 
@@ -15,6 +21,8 @@ statusDetailed() {
  else
   invalid "gsd";
  fi
+
+ spacer;
 }
 
 runStatusRequest() {

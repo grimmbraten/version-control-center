@@ -1,9 +1,13 @@
 pull() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gpl";
  else
   $(runPullRequest true);
  fi
+
+ spacer;
 }
 
 runPullRequest() {

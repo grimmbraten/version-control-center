@@ -1,8 +1,14 @@
 stashes() {
+ spacer;
+
  git stash list;
+
+ spacer;
 }
 
 save() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "What title would you like to have for the stash?";
  elif [ ! -z $2 ]; then
@@ -10,6 +16,8 @@ save() {
  else
   $(runSaveRequest $1 true);
  fi
+ 
+ spacer;
 }
 
 runSaveRequest() {
@@ -34,6 +42,8 @@ runSaveRequest() {
 }
 
 apply() {
+ spacer;
+
  if [ -z $1 ]; then
   #TODO: Make these missing calls into question
   missing "Which stash would you like to apply?";
@@ -42,6 +52,8 @@ apply() {
  else
   $(runApplyRequest $1 true);
  fi
+
+ spacer;
 }
 
 runApplyRequest() {
@@ -81,6 +93,8 @@ runApplyRequest() {
 }
 
 drop() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "Which stash would you like to drop?";
  elif [ ! -z $2 ]; then
@@ -88,6 +102,8 @@ drop() {
  else
   $(runDropRequest $1 true);
  fi
+
+ spacer;
 }
 
 runDropRequest() {

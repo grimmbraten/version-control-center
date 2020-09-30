@@ -1,4 +1,6 @@
 checkout() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "What branch do you want to checkout?";
  elif [ ! -z $2 ]; then
@@ -6,17 +8,25 @@ checkout() {
  else
   $(runCheckoutRequest $1 true);
  fi
+
+ spacer;
 }
 
 checkoutMaster() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gchm";
  else
   $(runCheckoutRequest master true);
  fi
+
+ spacer;
 }
 
 checkoutPrevious() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gchp";
   return;
@@ -26,6 +36,8 @@ checkoutPrevious() {
  branch=${branch#"refs/heads/"};
 
  $(runCheckoutRequest $branch true);
+
+ spacer;
 }
 
 runCheckoutRequest() {
@@ -66,6 +78,8 @@ runCheckoutRequest() {
 }
 
 checkoutCreateBranch() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "What do you want to name the new branch to?";
  elif [ ! -z $2 ]; then
@@ -73,6 +87,8 @@ checkoutCreateBranch() {
  else
   $(runCheckoutCreateBranchRequest $1 true);
  fi
+
+ spacer;
 }
 
 runCheckoutCreateBranchRequest() {
@@ -92,7 +108,7 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- if $(hasBranch $branch) || $(hasOrigin $branch); then
+ if [[ $(hasBranch $branch) || $(hasOrigin $branch) ]]; then
   prompt $alarm "Branch already exists" $verbose;
   echo false;
   return;

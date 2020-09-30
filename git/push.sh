@@ -1,10 +1,14 @@
 push() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gp";
   
  else
   $(runPushRequest true);
  fi
+
+ spacer;
 }
 
 #TODO: Make prompts more intuitive (use steps) checking, delivering, success
@@ -61,6 +65,8 @@ runPushRequest() {
 }
 
 pushUpstream() {
+ spacer;
+
  local flag="none";
 
  if [ ! -z $1 ]; then
@@ -73,6 +79,8 @@ pushUpstream() {
  fi
 
  $(runPushUpstreamRequest $flag true);
+
+ spacer;
 }
 
 runPushUpstreamRequest() {

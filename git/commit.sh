@@ -32,8 +32,8 @@ commitAll() {
  if ! $(isValidCommit $@); then
   invalid "gca <description> [body]";
  else
-  if ( $(stageAll true) && ! $(runCommitRequest $1 "$2" true) ); then
-   $(unstageAll true);
+  if ( $(runStageRequest . true) && ! $(runCommitRequest $1 "$2" true) ); then
+   $(runUnstageRequest "" true);
   fi
  fi
 
@@ -46,8 +46,8 @@ commitAllPush() {
  if ! $(isValidCommit $@); then
   invalid "gcap <description> [body]";
  else
-  if ( $(stageAll true) && ! $(runCommitRequest $1 "$2" true) ); then
-   $(unstageAll true);
+  if ( $(runStageRequest . true) && ! $(runCommitRequest $1 "$2" true) ); then
+   $(runUnstageRequest "" true);
    return;
   fi
   
@@ -184,8 +184,8 @@ addEmoji() {
 
 isValidCommit() {
  if [[ ! -z $3 || -z $1 ]]; then
-  return false;
+  echo false;
  else
-  return true;
+  echo true;
  fi
 }

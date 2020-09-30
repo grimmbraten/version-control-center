@@ -1,9 +1,13 @@
 logs() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gl";
  else
   runLogsRequest;
  fi
+
+ spacer;
 }
 
 runLogsRequest() {

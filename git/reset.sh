@@ -1,9 +1,13 @@
 reset() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gr";
  elif $(confirmIdentity "reset [all] changes"); then
   $(runResetRequest true);
  fi
+
+ spacer;
 }
 
 runResetRequest() {
@@ -26,11 +30,15 @@ runResetRequest() {
 }
 
 resetTracked() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "grt";
  elif $(confirmIdentity "reset all [tracked] changes"); then
   $(runResetTrackedRequest true);
  fi
+
+ spacer;
 }
 
 runResetTrackedRequest() {
@@ -46,11 +54,15 @@ runResetTrackedRequest() {
 }
 
 resetUntracked() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gru";
  elif $(confirmIdentity "reset all [untracked] changes"); then
   $(runResetUntrackedRequest true);
  fi
+
+ spacer;
 }
 
 runResetUntrackedRequest() {

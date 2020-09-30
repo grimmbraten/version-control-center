@@ -1,9 +1,13 @@
 fetch() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gf";
  else
   $(runFetchRequest true);
  fi
+
+ spacer;
 }   
 
 runFetchRequest() {

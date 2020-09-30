@@ -1,26 +1,34 @@
 stage() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "What folder or file would you like to bundle?";
  elif [ ! -z $2 ]; then
   invalid "ga <folder/file> ";
  elif $(runStageRequest $1 true); then
-  runStatusRequest;
+  spacer && git status --short;
  fi
+
+ spacer;
 }
 
 stageAll() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gaa";
  else
   $(runStageRequest . true);
  fi
+
+ spacer;
 }
 
 runStageRequest() { 
  local target=$1;
  local verbose=$2;
- local diff;
 
+ local diff;
  local before=$(unstagedCount);
 
  if ! $(run "git add $target"); then

@@ -1,26 +1,34 @@
 unstage() {
+ spacer;
+
  if [ -z $1 ]; then
   missing "What folder or file would you like to unbundle?";
  elif [ ! -z $2 ]; then
   invalid "gu <folder/file>";
  elif $(runUnstageRequest $1 true); then
-  runStatusRequest;
+  spacer && git status --short;
  fi
+
+ spacer;
 }
 
 unstageAll() {
+ spacer;
+
  if [ ! -z $1 ]; then
   invalid "gua";
  else
   $(runUnstageRequest "" true);
  fi
+
+ spacer;
 }
 
 runUnstageRequest() {
  local target=$1;
  local verbose=$2;
- local resetType;
 
+ local resetType;
  local before=$(stagedCount);
 
  if [ -z $target ]; then
