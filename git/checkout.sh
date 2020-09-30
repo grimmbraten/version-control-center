@@ -79,8 +79,10 @@ runCheckoutCreateBranchRequest() {
  local branch=$1;
  local verbose=$2;
 
- if ! $(existsInFile $branch $types/branch.txt); then
-  prompt $construction "$branch is not a valid branch type, enter [gbp] to display all allowed types" $verbose;
+ local type=$(split $branch '/' 1);
+
+ if ! $(existsInFile $type $types/branch.txt); then
+  prompt $construction "$type is not a valid branch type, enter [gbp] to display all allowed types" $verbose;
   return;
  fi
 
