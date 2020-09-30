@@ -9,12 +9,12 @@ push() {
 
 #TODO: Make prompts more intuitive (use steps) checking, delivering, success
 runPushRequest() {
- local output=$1;
+ local verbose=$1;
  local branch=$(onBranch);
  local icon;
 
  if ! $(hasOrigin); then
-  prompt $construction "Branch does not have a tracked destination" $output;
+  prompt $construction "Branch does not have a tracked destination" $verbose;
   echo false;
   return;
  fi
@@ -23,7 +23,7 @@ runPushRequest() {
  local behind=$(originBehindCount);
 
  if [ $ahead -lt 1 ]; then
-  prompt $dissapointed "There are no packages ready for delivery _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $output;
+  prompt $disappointed "There are no packages ready for delivery _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $verbose;
   echo false;
   return;
  fi
@@ -43,7 +43,7 @@ runPushRequest() {
   icon=$car;
  fi
 
- prompt $icon "Delivering [$ahead] package$(plural $ahead) to tracked destination" $output;
+ prompt $icon "Delivering [$ahead] package$(plural $ahead) to tracked destination" $verbose;
 
  if ! $(run "git push origin $branch"); then  
   echo false;
@@ -51,12 +51,12 @@ runPushRequest() {
  fi
 
  if [ ! $(originAheadCount) -eq 0 ]; then
-  prompt $boom "Failed to deliver packages to tracked destination" $output; 
+  prompt $boom "Failed to deliver packages to tracked destination" $verbose; 
   echo false;
   return;
  fi 
 
- prompt $tada "Successfully delivered [$ahead] package$(plural $ahead)" $output;
+ prompt $tada "Successfully delivered [$ahead] package$(plural $ahead)" $verbose;
  echo true;
 }
 
@@ -77,22 +77,22 @@ pushUpstream() {
 
 runPushUpstreamRequest() {
  local flag=$1;
- local output=$2;
+ local verbose=$2;
  local branch=$(onBranch);
  local icon;
 
  if $(hasOrigin); then
-  prompt $construction "Branch already has a tracked destination" $output;
+  prompt $construction "Branch already has a tracked destination" $verbose;
   echo false;
   return;
  fi
 
  local ahead=$(masterAheadCount);
 
- if [[ $ahead -eq 0 && "$flag" != "-force" ]] ; then
+ if ( [ $ahead -eq 0 ] && [[ "$flag" != "-force" || "$flag" != "-f" ]] ); then
   local behind=$(masterBehindCount); 
   
-  prompt $dissapointed "There are no packages ready for delivery _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $output;
+  prompt $disappointed "There are no packages ready for delivery _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $verbose;
   echo false;
   return;
  fi
@@ -105,13 +105,13 @@ runPushUpstreamRequest() {
   icon=$car;
  fi
 
- prompt $icon "Delivering [$ahead] package$(plural $ahead)] and tracks destionation" $output;
+ prompt $icon "Delivering [$ahead] package$(plural $ahead)] and tracks destination" $verbose;
 
  if ! $(run "git push --set-upstream origin $branch"); then
   echo false;
   return;   
  fi
 
- prompt $tada "Successfully delivered [$ahead] package$(plural $ahead) and tracked destionation" $output;
+ prompt $tada "Successfully delivered [$ahead] package$(plural $ahead) and tracked destination" $verbose;
  echo true;
 }

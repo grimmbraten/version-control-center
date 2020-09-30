@@ -18,7 +18,7 @@ stageAll() {
 
 runStageRequest() { 
  local target=$1;
- local output=$2;
+ local verbose=$2;
  local diff;
 
  local before=$(unstagedCount);
@@ -46,10 +46,10 @@ runStageRequest() {
  local total=$(changeCount);
  
  if [ $diff -eq 0 ]; then
-  prompt $dissapointed "Could not find any changes to bundle in that $target _($staged/$total)]" $output;
+  prompt $disappointed "Could not find any changes to bundle in that $target _($staged/$total)]" $verbose;
   echo false;
  else
-  prompt $package "Bundling [$diff] file$(plural $diff) into a package... _($staged/$total)]" $output;
+  prompt $package "Bundling [$diff] file$(plural $diff) into a package... _($staged/$total)]" $verbose;
   echo true;
  fi  
 }

@@ -8,12 +8,12 @@ pull() {
 
 runPullRequest() {
  local icon;
- local output=$1;
+ local verbose=$1;
 
  local branch=$(onBranch);
 
  if ! $(hasOrigin); then
-  prompt $construction "Branch does not have a tracked destination" $output;
+  prompt $construction "Branch does not have a tracked destination" $verbose;
   echo false;
   return;
  fi
@@ -21,7 +21,7 @@ runPullRequest() {
  if ! $(isBehindOrigin); then
   local ahead=$(originAheadCount);
 
-  prompt $tada "Branch is [up to date] with tracked destination _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $output;
+  prompt $tada "Branch is [up to date] with tracked destination _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $verbose;
   echo false;
   return;
  fi 
@@ -36,7 +36,7 @@ runPullRequest() {
   icon=$car;
  fi
 
- prompt $icon "Receiving [$behind] package$(plural $behind) from tracked destination" $output;
+ prompt $icon "Receiving [$behind] package$(plural $behind) from tracked destination" $verbose;
 
  if ! $(run "git pull origin $branch"); then
   echo false;
@@ -44,12 +44,12 @@ runPullRequest() {
  fi
 
  if $(isBehindOrigin); then
-  prompt $boom "Failed to receive packages from tracked exporter" $output;
+  prompt $boom "Failed to receive packages from tracked exporter" $verbose;
   echo false;
   return;
  fi
  
- prompt $tada "Successfully recevied [$behind] package$(plural $behind)" $output;
+ prompt $tada "Successfully received [$behind] package$(plural $behind)" $verbose;
  echo true;
 }
 

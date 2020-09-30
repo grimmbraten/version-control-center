@@ -1,8 +1,9 @@
 if [ -d .git ]; then
 
  local root=$(dirname "$0");
- . $root/helpers/bundler.sh
- . $root/git/bundler.sh
+ . $root/config/bundler.sh;
+ . $root/helpers/bundler.sh;
+ . $root/git/bundler.sh;
 
  run() {
   local response=$(eval "$1 2>&1");
@@ -11,15 +12,14 @@ if [ -d .git ]; then
    echo true;
   else
    error "$1";
-   spacer;
    prompt "" $response true;
    echo false;
   fi
  }
 
  alias gb=branches;
- alias gbpe='nano branch.txt';
- alias gbp='cat branch.txt | sed s/"%"//';
+ alias gbt="cat $types/branch.txt | sed s/"%"//";
+ alias gbte="nano $types/branch.txt";
  alias gbo=branchOrigins;
  alias gbr=branchRename;
  alias gbd=branchDelete;
@@ -31,6 +31,8 @@ if [ -d .git ]; then
  alias gchp=checkoutPrevious;
 
  alias gc=commit;
+ alias gct="cat $types/commit.txt | sed s/"%"//";
+ alias gcte="nano $types/commit.txt";
  alias gcu=commitUndo;
  alias gcp=commitPush;
  alias gcr=commitRename;

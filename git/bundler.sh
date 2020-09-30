@@ -1,26 +1,26 @@
-local git=$(dirname "$0");
+local dir=$(dirname "$0");
 
 # dependencies (none)
-. $git/status.sh
-. $git/reset.sh
-. $git/fetch.sh
-. $git/stash.sh
-. $git/push.sh
-. $git/logs.sh
+. $dir/status.sh
+. $dir/reset.sh
+. $dir/fetch.sh
+. $dir/stash.sh
+. $dir/push.sh
+. $dir/logs.sh
 
 # dependencies (status)
-. $git/stage.sh
-. $git/unstage.sh
+. $dir/stage.sh
+. $dir/unstage.sh
 
 # dependencies (fetch)
-. $git/merge.sh
-. $git/pull.sh
+. $dir/merge.sh
+. $dir/pull.sh
 
 # dependencies (stash)
-. $git/checkout.sh
+. $dir/checkout.sh
 
 # dependencies (push)
-. $git/branch.sh
+. $dir/branch.sh
 
 # dependencies (stage, unstage, push)
-. $git/commit.sh
+. $dir/commit.sh

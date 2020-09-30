@@ -40,7 +40,7 @@ runMergeRequest() {
  local target;
  local branch=$1;
  local flag=$2;
- local output=$3;
+ local verbose=$3;
 
  $(runFetchRequest);
 
@@ -49,19 +49,19 @@ runMergeRequest() {
  elif $(hasOrigin $branch); then
   target="origin/$branch";
  else
-  prompt $dissapointed "That branch does not exist" $output;
+  prompt $disappointed "That branch does not exist" $verbose;
   echo false;
   return
  fi
  
  if [ $(behindCount $branch) -eq 0 ]; then
-  prompt $tada "Branch is already [up to date] with [$target]" $output;
+  prompt $tada "Branch is already [up to date] with [$target]" $verbose;
   echo false;
   return;
  fi
 
  if ( $(hasUnstagedChanges) && [ "$flag" != "-force" ] ); then
-  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $output;
+  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $verbose;
   echo false;
   return;
  fi
@@ -71,6 +71,6 @@ runMergeRequest() {
   return;
  fi
  
- prompt $tada "Successfully merged [$target] without any issues" $output;
+ prompt $tada "Successfully merged [$target] without any issues" $verbose;
  echo true;
 }

@@ -7,21 +7,21 @@ reset() {
 }
 
 runResetRequest() {
- local output=$1;
+ local verbose=$1;
 
  if ! $(runResetUntrackedRequest); then
-  prompt $dissapointed "Failed to reset [untracked] changes on working branch" $output;
+  prompt $disappointed "Failed to reset [untracked] changes on working branch" $verbose;
   echo false;
   return;
  fi
 
  if ! $(runResetTrackedRequest); then
-  prompt $dissapointed "Failed to reset [tracked] changes on working branch" $output;
+  prompt $disappointed "Failed to reset [tracked] changes on working branch" $verbose;
   echo false;
   return;
  fi
 
- prompt $tada "Successfully reset all [tracked] and [untracked] changes without any issues" $output;
+ prompt $tada "Successfully reset all [tracked] and [untracked] changes without any issues" $verbose;
  echo true;
 }
 
@@ -34,14 +34,14 @@ resetTracked() {
 }
 
 runResetTrackedRequest() {
- local output=$1;
+ local verbose=$1;
 
  if ! $(run "git reset --hard"); then
   echo false;
   return;
  fi
 
- prompt $tada "Successfully reset all [tracked] changes without any issues" $output;
+ prompt $tada "Successfully reset all [tracked] changes without any issues" $verbose;
  echo true;
 }
 
@@ -54,13 +54,13 @@ resetUntracked() {
 }
 
 runResetUntrackedRequest() {
- local output=$1;
+ local verbose=$1;
 
  if ! $(run "git clean -df"); then
   echo false;
   return;
  fi
 
- prompt $tada "Successfully reset all [untracked] changes without any issues" $output;
+ prompt $tada "Successfully reset all [untracked] changes without any issues" $verbose;
  echo true;
 }

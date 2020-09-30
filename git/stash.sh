@@ -14,10 +14,10 @@ save() {
 
 runSaveRequest() {
  local title=$1;
- local output=$2;
+ local verbose=$2;
 
  if ! $(hasChanges); then
-  prompt $dissapointed "Branch contains [no] changes to stash" $output;
+  prompt $disappointed "Branch contains [no] changes to stash" $verbose;
   echo false;
   return;
  fi
@@ -29,7 +29,7 @@ runSaveRequest() {
  
  local changes=$(changeCount);
 
- prompt $tada "Successfully stashed [$changes] change$(plural $changes) without any issues]" $output;
+ prompt $tada "Successfully stashed [$changes] change$(plural $changes) without any issues]" $verbose;
  echo true;
 }
 
@@ -47,10 +47,10 @@ apply() {
 runApplyRequest() {
  local stash;
  local index=$1;
- local output=$2;
+ local verbose=$2;
 
  if $(hasUnstagedChanges); then
-  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $output;
+  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $verbose;
   echo false;
   return;
  fi
@@ -65,7 +65,7 @@ runApplyRequest() {
  local count=$(stashCount);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $dissapointed "That stash does not exist" $output;
+  prompt $disappointed "That stash does not exist" $verbose;
   return;
  fi
 
@@ -76,7 +76,7 @@ runApplyRequest() {
 
  local total=$(changeCount);
 
- prompt $tada "Successfully applied [$changes] stashed change$(plural $changes) without any issues" $output;
+ prompt $tada "Successfully applied [$changes] stashed change$(plural $changes) without any issues" $verbose;
  echo true;
 }
 
@@ -93,7 +93,7 @@ drop() {
 runDropRequest() {
  local stash;
  local index=$1;
- local output=$2;
+ local verbose=$2;
 
  if ! $(isNaN $index); then
   stash="stash@{$index}";
@@ -105,7 +105,7 @@ runDropRequest() {
  local count=$(stashCount);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $dissapointed "That stashed does not exist" $output;
+  prompt $disappointed "That stashed does not exist" $verbose;
   return;
  fi
 
@@ -114,6 +114,6 @@ runDropRequest() {
   return;
  fi
 
- prompt $tada "Successfully dropped [$stash] without any issues" $output;
+ prompt $tada "Successfully dropped [$stash] without any issues" $verbose;
  echo true;
 }

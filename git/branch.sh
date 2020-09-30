@@ -26,22 +26,25 @@ branchRename() {
 
 runBranchRenameRequest() {
  local name=$1;
- local output=$2;
+ local verbose=$2;
+ 
+ local type=$(split $name '/' 1);
 
- if ! $(existsInFile $name branch.txt); then
-  prompt $construction "$name is not a valid branch prefix, enter [gbp] to display all allowed prefixes" $output;
+ if ! $(existsInFile $type $types/branch.txt); then
+  prompt $construction "$type is not a valid branch type, enter [gbp] to display all allowed types" $verbose;
   return;
  fi
 
  if $(hasBranch $1) || $(hasOrigin $1); then
-  prompt $construction "Branch already exists" $output;
+  prompt $construction "Branch already exists" $verbose;
   echo false;
   return;
  fi
 
  local branch=$(onBranch);
+ name=$(capitalize $name);
 
- if ! $(run "git branch -m $1"); then
+ if ! $(run "git branch -m $name"); then
   echo false;
   return;
  fi
@@ -59,13 +62,13 @@ runBranchRenameRequest() {
     return;
    fi
 
-   prompt $tada "Successfully renamed branch and origin without any issues" $output;
+   prompt $tada "Successfully renamed branch and origin without any issues" $verbose;
    echo true;
    return;
   fi
  fi
 
- prompt $tada "Successfully renamed branch without any issues" $output;
+ prompt $tada "Successfully renamed branch without any issues" $verbose;
  echo true;
 }
 
@@ -73,7 +76,7 @@ deleteBranch() {
  local branch=$(onBranch);
 
  if [[ "$1" = master || ( -z $1 && $branch = master ) ]]; then
-  prompt $lock "Master is protected from being deleted _(permission deined)]";
+  prompt $lock "Master is protected from being deleted _(permission denied)]";
  elif ( [ -z $1 ] && $(question "Do you want to delete branch from tracked destination?") ); then
   $(processDeleteBranchRequest $branch true);
  else
@@ -83,7 +86,7 @@ deleteBranch() {
 
 runDeleteBranchRequest() {
  local branch=$1;
- local output=$2;
+ local verbose=$2;
  local localBranch=$(onBranch);
 
  if [ $branch = $localBranch ]; then
@@ -100,7 +103,7 @@ runDeleteBranchRequest() {
  fi  
 
  if ! ( $(hasOrigin $branch) && ! $(question "Do you also want to delete branch from tracked destination?") ); then
-  prompt $tada "Successfully deleted [$branch] without any issues" $output;
+  prompt $tada "Successfully deleted [$branch] without any issues" $verbose;
   echo true;
   return;
  fi
@@ -112,7 +115,7 @@ runDeleteBranchRequest() {
 
  $(runFetchRequest);
 
- prompt $tada "Successfully deleted [$branch] and [origin/$branch] without any issues" $output;
+ prompt $tada "Successfully deleted [$branch] and [origin/$branch] without any issues" $verbose;
  echo true;
 }
 
@@ -120,7 +123,7 @@ deleteBranchOrigin() {
  local branch=$(onBranch);
 
  if [[ "$1" = master || ( -z $1 && $branch = master ) ]]; then
-  prompt $lock "Master is protected from being deleted _(permission deined)]";
+  prompt $lock "Master is protected from being deleted _(permission denied)]";
  elif ( [ -z $1 ] && $(question "Do you want to delete branch from tracked destination") ); then
   $(runDeleteBranchOriginRequest $branch true);
  else
@@ -130,10 +133,10 @@ deleteBranchOrigin() {
 
 runDeleteBranchOriginRequest() {
  local branch=$1;
- local output=$2;
+ local verbose=$2;
  
  if ! $(hasOrigin $branch); then
-  prompt $dissapointed "Branch does not exist in tracked destination" $output;
+  prompt $disappointed "Branch does not exist in tracked destination" $verbose;
   echo false;
   return;
  fi
@@ -145,6 +148,6 @@ runDeleteBranchOriginRequest() {
 
  $(runFetchRequest);
 
- prompt $tada "Successfully deleted [origin/$branch] without any issues" $output;
+ prompt $tada "Successfully deleted [origin/$branch] without any issues" $verbose;
  echo true;
 }

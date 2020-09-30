@@ -18,7 +18,7 @@ unstageAll() {
 
 runUnstageRequest() {
  local target=$1;
- local output=$2;
+ local verbose=$2;
  local resetType;
 
  local before=$(stagedCount);
@@ -54,10 +54,10 @@ runUnstageRequest() {
  local total=$(changeCount);
 
  if [ $diff -eq 0 ]; then
-  prompt $dissapointed "Could not find any changes to unbundle in that $target _($staged/$total)]" $output;
+  prompt $disappointed "Could not find any changes to unbundle in that $target _($staged/$total)]" $verbose;
   echo false;
  else   
-  prompt $package "Unbundling [$diff] file$(plural $diff) from package... _($staged/$total)]" $output;
+  prompt $package "Unbundling [$diff] file$(plural $diff) from package... _($staged/$total)]" $verbose;
   echo true;
  fi
 }

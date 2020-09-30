@@ -30,7 +30,7 @@ checkoutPrevious() {
 
 runCheckoutRequest() {
  local target=$1;
- local output=$2;
+ local verbose=$2;
  local branch=$(onBranch);
 
  if $(hasChanges); then
@@ -48,7 +48,7 @@ runCheckoutRequest() {
    return;
   fi
  else
-  prompt $dissapointed "That branch does not exist" $output;
+  prompt $disappointed "That branch does not exist" $verbose;
   echo false;
   return
  fi
@@ -61,7 +61,7 @@ runCheckoutRequest() {
   fi
  fi
 
- prompt $tada "Successfully switched branch from [$branch] to [$target]" $output;
+ prompt $tada "Successfully switched branch from [$branch] to [$target]" $verbose;
  echo true;
 }
 
@@ -77,21 +77,21 @@ checkoutCreateBranch() {
 
 runCheckoutCreateBranchRequest() {
  local branch=$1;
- local output=$2;
+ local verbose=$2;
 
- if ! $(existsInFile $branch branch.txt); then
-  prompt $construction "$branch is not a valid branch prefix, enter [gbp] to display all allowed prefixes" $output;
+ if ! $(existsInFile $branch $types/branch.txt); then
+  prompt $construction "$branch is not a valid branch type, enter [gbp] to display all allowed types" $verbose;
   return;
  fi
 
  if $(hasChanges); then
-  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $output;
+  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $verbose;
   echo false;
   return;
  fi
 
  if $(hasBranch $branch) || $(hasOrigin $branch); then
-  prompt $alarm "Branch already exists" $output;
+  prompt $alarm "Branch already exists" $verbose;
   echo false;
   return;
  fi
@@ -101,6 +101,6 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- prompt $tada "Successfully created a new branch" $output;
+ prompt $tada "Successfully created a new branch" $verbose;
  echo true;
 }

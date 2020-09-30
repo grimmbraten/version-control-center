@@ -7,13 +7,13 @@ fetch() {
 }   
 
 runFetchRequest() {
- local output=$1;
+ local verbose=$1;
 
  if ! $(run "git fetch -p"); then
   echo false;
   return;
  fi
 
- prompt $tada "Development environment is now synchronize with tracked destination" $output;
+ prompt $tada "Development environment is now synchronize with tracked destination" $verbose;
  echo true;
 }
