@@ -21,3 +21,4 @@ typo=:pencil:-U000270F
 security=:lock:-U0001F512
 performance=:zap:-U00026A1
 remove=:fire:-U0001F525
+end-of-file
