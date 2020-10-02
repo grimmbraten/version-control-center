@@ -3,7 +3,9 @@ onBranch() {
 }
 
 aheadCount() {
- if $(hasBranch $1); then
+ if [ -z $1 ]; then
+  echo $(git rev-list --right-only --count $(onBranch)...origin/$(onBranch));
+ elif $(hasBranch $1); then
   echo $(git rev-list --right-only --count $(onBranch)...$1);
  else
   echo 0;
@@ -25,7 +27,9 @@ originAheadCount() {
 }
 
 behindCount() {
- if $(hasBranch $1); then
+ if [ -z $1 ]; then
+  echo $(git rev-list --left-only --count $(onBranch)...origin/$(onBranch));
+ elif $(hasBranch $1); then
   echo $(git rev-list --left-only --count $(onBranch)...$1);
  else
   echo 0;
@@ -51,7 +55,11 @@ getStashIndexByName() {
 }
 
 identity() {
- echo $(git rev-parse --short HEAD);
+ if [ -z $1 ]; then
+  echo $(git rev-parse --short HEAD);
+ else
+  echo $(git rev-parse --short $1);
+ fi
 }
 
 masterIdentity() {
