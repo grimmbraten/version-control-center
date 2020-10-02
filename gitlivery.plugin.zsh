@@ -5,16 +5,19 @@ if [ -d .git ]; then
  . $root/helpers/bundler.sh;
  . $root/git/bundler.sh;
 
+ # $1: string (git query)
  run() {
   local response=$(eval "$1 2>&1");
 
   if [ $? -eq 0 ]; then
-   echo true;
-  else
-   error "$1";
-   prompt "" $response true;
-   echo false;
-  fi
+   if ( $(contains "$response" "error") || $(contains "$response" "fatal") ); then
+    error "$1";
+    prompt $microscopeIcon "$response" true;
+    echo false;
+   else
+    echo true;
+   fi
+  fi 
  }
 
  alias gb=branches;
