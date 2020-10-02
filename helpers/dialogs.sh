@@ -1,6 +1,7 @@
+# $1: string (question for the user)
 question() {
  if [ ! -z $1 ]; then
-  prompt $thinking "[Yes/no]: $1";
+  prompt $thinkingIcon "[Yes/no]: $1";
   local answer=$(bash -c 'read -e -p "" tmp; echo $tmp')
 
   if [[ $answer = Yes || $answer = yes || $answer = Y || $answer = y ]]; then
@@ -13,12 +14,13 @@ question() {
  fi
 }
 
+# $1: string (message describing intended action)
 confirmIdentity() {
  if [ ! -z $1 ]; then
   local identity=$(identity);
 
-  prompt $alarm "You are about to $1";
-  prompt $keylock "Please enter [$identity] to confirm this action";
+  prompt $alarmIcon "You are about to $1";
+  prompt $lockIcon "Please enter [$identity] to confirm this action";
   local input=$(bash -c 'read -e -p "" tmp; echo $tmp')
 
   if [ "$input" = "$identity" ]; then
