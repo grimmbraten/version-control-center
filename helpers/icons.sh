@@ -1,9 +1,9 @@
 # general icons
 local alarmIcon="\U0001F6A8";
-local Icon="\U0001F4A5";
+local bookmarkIcon="\U0001F516";
+local boomIcon="\U0001F4A5";
 local constructionIcon="\U0001F6A7";
 local descriptionIcon="\U0001F4D6";
-local labelIcon="\U0001F3F7";
 local leafsIcon="\U0001F343";
 local lockIcon="\U0001F512";
 local microscopeIcon="\U0001F52C";
