@@ -24,8 +24,11 @@ runStatusRequest() {
 
  if [ "$1" = true ]; then
   local changes=$(changeCount);
-
-  spacer;
+  
+  if [ $changes -gt 0 ]; then
+   spacer;
+  fi
+  
   prompt $(getBranchIcon $changes) "$(getBranchIconName $changes) with [$changes file$(plural $changes)] _($(unstagedCount)/$(stagedCount))]" true;
  fi
 }
