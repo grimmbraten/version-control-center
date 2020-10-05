@@ -7,6 +7,8 @@ local dir=$(dirname "$0");
 . $dir/checkers.sh
 . $dir/dialogs.sh
 . $dir/prompts.sh
+. $dir/branch.sh
 . $dir/git.sh
+
 
 
