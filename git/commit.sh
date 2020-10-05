@@ -91,9 +91,9 @@ runCommitRequest() {
   return;
  fi
 
- local before=$(stagedCount);
+ local staged=$(stagedCount);
 
- if [ $before -eq 0 ]; then
+ if [ $staged -eq 0 ]; then
   prompt $telescopeIcon "There is no package ready to be sealed" $3;
   echo false;
   return;
@@ -118,15 +118,12 @@ runCommitRequest() {
    return;
   fi
  fi
-
- local after=$(stagedCount);
- local changeCount=$(($before - $after));
  
- if [ "$3" = true ]; then
+ if [[ "$3" = true && $(changeCount) -gt 0 ]]; then
   mention "$(git -c color.status=always status --short)\n";
  fi
 
- prompt $tadaIcon "Successfully sealed a package with [$changeCount file$(plural $changeCount)]" $3;
+ prompt $tadaIcon "Successfully sealed a package with [$staged file$(plural $staged)]" $3;
  prompt "   $packageIcon" "[$(identity)]" $3;
  prompt "   $(getEmojiForConsole $1)" "$(capitalize "$(trim "$(split $1 ":" 2)")")" $3;
 
