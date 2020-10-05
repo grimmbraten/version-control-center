@@ -106,7 +106,7 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- if ( $(hasBranch $1) || $(hasOrigin $1) ); then
+ if $(hasBranch $1); then
   prompt $surprisedIcon "Oh no, a branch with that name already exists" $2;
   echo false;
   return;

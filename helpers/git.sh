@@ -98,14 +98,30 @@ hasChanges() {
 }
 
 hasBranch() {
- if [ -n "$(git show-ref refs/heads/$1)" ]; then;
+ if $(hasLocalBranch $1); then
+  echo true;
+ elif $(hasRemoteBranch $1); then
   echo true;
  else
   echo false;
  fi
 }
 
-hasOrigin() {
+hasLocalBranch() {
+ local branch=$(onBranch);
+
+ if [ ! -z $1 ]; then
+  branch=$1;
+ fi
+
+ if [ -n "$(git show-ref refs/heads/$branch)" ]; then;
+  echo true;
+ else
+  echo false;
+ fi
+}
+
+hasRemoteBranch() {
  local branch=$(onBranch);
 
  if [ ! -z $1 ]; then
