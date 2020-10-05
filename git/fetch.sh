@@ -10,14 +10,13 @@ fetch() {
  spacer;
 }   
 
+# $1: boolean (verbose)
 runFetchRequest() {
- local verbose=$1;
-
  if ! $(run "git fetch -p"); then
   echo false;
   return;
  fi
 
- prompt $tada "Development environment is now synchronize with tracked destination" $verbose;
+ prompt $tadaIcon "Successfully updated branch references with remote" $1;
  echo true;
 }
