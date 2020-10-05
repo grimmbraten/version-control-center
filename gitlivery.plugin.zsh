@@ -12,7 +12,7 @@ if [ -d .git ]; then
   if [ $? -eq 0 ]; then
    if ( $(contains "$response" "error") || $(contains "$response" "fatal") ); then
     error "$1";
-    prompt $microscopeIcon "$response" true;
+    mention "$response" true;
     echo false;
    else
     echo true;
