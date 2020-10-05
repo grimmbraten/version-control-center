@@ -5,6 +5,7 @@ local dir=$(dirname "$0");
 
 . $dir/formatters.sh
 . $dir/checkers.sh
+. $dir/package.sh
 . $dir/dialogs.sh
 . $dir/prompts.sh
 . $dir/branch.sh
