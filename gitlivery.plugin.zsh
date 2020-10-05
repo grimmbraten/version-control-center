@@ -25,8 +25,8 @@ if [ -d .git ]; then
  alias gbte="nano $types/branch.txt";
  alias gbo=branchOrigins;
  alias gbr=branchRename;
- alias gbd=branchDelete;
- alias gbdo=branchDeleteOrigin;
+ alias gbd=deleteBranch;
+ alias gbdo=deleteBranchOrigin;
 
  alias gch=checkout;
  alias gchb=checkoutCreateBranch;
