@@ -1,12 +1,10 @@
 stage() {
  spacer;
 
- if [ -z $1 ]; then
-  missing "What folder or file would you like to bundle?";
- elif [ ! -z $2 ]; then
-  invalid "ga <folder/file> ";
- elif $(runStageRequest $1 true); then
-  spacer && git status --short;
+ if [[ -z $1 || ! -z $2 ]]; then
+  invalid "ga <target> ";
+ else
+  $(runStageRequest $1 true);
  fi
 
  spacer;
@@ -24,40 +22,31 @@ stageAll() {
  spacer;
 }
 
+# $1: string  (targeted file or folder to stage)
+# $2: boolean (verbose)
 runStageRequest() { 
- local target=$1;
- local verbose=$2;
-
  local diff;
  local before=$(unstagedCount);
 
- if ! $(run "git add $target"); then
+ if ! $(run "git add $1"); then
   echo false;
   return;
  fi
 
  local after=$(unstagedCount);
  
- if [ $target != . ]; then
-  if $(isFile $target); then
-   target="file";
-  else
-   target="folder";
-  fi
-
+ if [ $1 != . ]; then
   diff=$(($before - $after));
  else
   diff=$before;
  fi
-
- local staged=$(stagedCount);
- local total=$(changeCount);
  
  if [ $diff -eq 0 ]; then
-  prompt $disappointed "Could not find any changes to bundle in that $target _($staged/$total)]" $verbose;
+  prompt $telescopeIcon "$(capitalize $(getTargetType $target)) does not exist in repository" $2;
   echo false;
  else
-  prompt $package "Bundling [$diff] file$(plural $diff) into a package... _($staged/$total)]" $verbose;
+  mention "$(git -c color.status=always status --short)\n";
+  prompt $packageIcon "Added [$diff file$(plural $diff)] to unlabeled package _($(stagedCount)/$(changeCount))]" $2;
   echo true;
  fi  
 }

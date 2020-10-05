@@ -1,26 +1,11 @@
 merge() {
  spacer;
 
- local flag="none";
-
- if [ -z $1 ]; then
-  missing "Which branch do you want to merge?";
-  return;
- elif [ $1 = $(onBranch) ]; then
-  invalid "gm <branch> [flag]";
-  return;
+ if [[ -z $1 || ! -z $2 ]]; then
+  invalid "gm <branch>";
+ else
+  $(runMergeRequest $1 true);
  fi
-
- if [ ! -z $2 ]; then
-  if [ ! -z $3 ]; then
-   invalid "gm <branch> [flag]";
-   return;
-  fi
-
-  flag=$2;
- fi
-
- $(runMergeRequest $1 $flag true);
 
  spacer;
 }
@@ -28,48 +13,38 @@ merge() {
 mergeMaster() {
  spacer;
 
- local flag="none";
-
  if [ ! -z $1 ]; then
-  if [ ! -z $2 ]; then
-   invalid "gmm [flag]";
-   return;
-  fi
-
-  flag=$1;
+  invalid "gmm";
+ else
+  $(merge master true);
  fi
-
- $(merge master $flag true);
 
  spacer;
 }
 
+# $1: string  (branch to merge)
+# $2: boolean (verbose)
 runMergeRequest() {
  local target;
- local branch=$1;
- local flag=$2;
- local verbose=$3;
 
- $(runFetchRequest);
-
- if $(hasBranch $branch); then
-  target=$branch;
- elif $(hasOrigin $branch); then
-  target="origin/$branch";
- else
-  prompt $disappointed "That branch does not exist" $verbose;
-  echo false;
-  return
- fi
- 
- if [ $(behindCount $branch) -eq 0 ]; then
-  prompt $tada "Branch is already [up to date] with [$target]" $verbose;
+ if $(hasChanges); then
+  prompt $constructionIcon "You are on a work in progress branch, please [commit or stash] before you merge" $2;
   echo false;
   return;
  fi
 
- if ( $(hasUnstagedChanges) && [ "$flag" != "-force" ] ); then
-  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $verbose;
+ if $(hasBranch $1); then
+  target=$1;
+ elif $(hasOrigin $1); then
+  target="origin/$1";
+ else
+  prompt $surprisedIcon "Oh no, that branch does not exist" $2;
+  echo false;
+  return
+ fi
+
+ if [ $(behindCount $target) -eq 0 ]; then
+  prompt $tadaIcon "Branch is already [up to date] with [$(identity $target)], no merge is needed" $2;
   echo false;
   return;
  fi
@@ -79,6 +54,6 @@ runMergeRequest() {
   return;
  fi
  
- prompt $tada "Successfully merged [$target] without any issues" $verbose;
+ prompt $tadaIcon "Successfully merged [$(identity $target)] into [$(identity)] without any issues" $2;
  echo true;
 }
