@@ -17,7 +17,7 @@ runPullRequest() {
  $(runFetchRequest);
  local branch=$(onBranch);
 
- if ! $(hasOrigin); then
+ if ! $(hasRemoteBranch); then
   prompt $surprisedIcon "Oh no, branch does not exist on remote repository" $1;
   echo false;
   return;

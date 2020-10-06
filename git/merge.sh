@@ -33,9 +33,9 @@ runMergeRequest() {
   return;
  fi
 
- if $(hasBranch $1); then
+ if $(hasLocalBranch $1); then
   target=$1;
- elif $(hasOrigin $1); then
+ elif $(hasRemoteBranch $1); then
   target="origin/$1";
  else
   prompt $surprisedIcon "Oh no, that branch does not exist" $2;

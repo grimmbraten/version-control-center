@@ -58,14 +58,14 @@ runCheckoutRequest() {
   $(runSaveRequest $(onBranch));  
  fi
 
- if $(hasBranch $1); then
+ if $(hasLocalBranch $1); then
   toIdentity=$(identity $1);
 
   if ! $(run "git checkout $1"); then
    echo false;
    return;
   fi
- elif $(hasOrigin $1); then
+ elif $(hasRemoteBranch $1); then
   toIdentity=$(identity origin/$1);
 
   if ! $(run "git checkout -b $1 origin/$1"); then

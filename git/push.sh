@@ -27,7 +27,7 @@ pushUpstream() {
 runPushRequest() {
  local onBranch=$(onBranch);
 
- if ! $(hasOrigin); then
+ if ! $(hasRemoteBranch); then
   prompt $surprisedIcon "Oh no, branch does not exist on remote repository" $1;
   echo false;
   return;
@@ -70,7 +70,7 @@ runPushRequest() {
 runPushUpstreamRequest() {
  local onBranch=$(onBranch);
 
- if $(hasOrigin); then
+ if $(hasRemoteBranch); then
   prompt $telescopeIcon "Detected an already existing remote branch, using normal push instead" $1;
   echo $(runPushRequest true);
   return;

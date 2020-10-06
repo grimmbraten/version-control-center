@@ -76,7 +76,7 @@ runBranchRenameRequest() {
 
  local newBranchName=$(capitalize $1);
 
- if ( $(hasBranch $newBranchName) || $(hasOrigin $newBranchName) ); then
+ if $(hasBranch $newBranchName); then
   prompt $surprisedIcon "Oh no, a branch with that name already exists" $2;
   echo false;
   return;
@@ -89,7 +89,7 @@ runBranchRenameRequest() {
   return;
  fi
 
- if $(hasOrigin $branch); then
+ if $(hasRemoteBranch $branch); then
   if $(question "Do you also want to rename the remote branch?"); then
    if ! $(runPushUpstreamRequest true); then    
     echo false;
@@ -122,7 +122,7 @@ runDeleteBranchRequest() {
   return;
  fi  
 
- if $(hasOrigin $1); then
+ if $(hasRemoteBranch $1); then
   if $(question "Do you also want to delete the remote branch?"); then
    if ! $(runDeleteBranchOriginRequest $1 true); then  
     echo false;
@@ -138,7 +138,7 @@ runDeleteBranchRequest() {
 # $1: string  (branch to delete)
 # $2: boolean (verbose)
 runDeleteBranchOriginRequest() {
- if ! $(hasOrigin $1); then
+ if ! $(hasRemoteBranch $1); then
   prompt $surprisedIcon "Oh no, [$1] does not exist in the remote repository" $2;
   echo false;
   return;

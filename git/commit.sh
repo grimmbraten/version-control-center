@@ -155,7 +155,7 @@ runCommitUndoRequest() {
 # $2: string  (description)
 # $3: boolean (verbose)
 runCommitRenameRequest() {
- if ( $(hasOrigin) && [ $(originAheadCount) -eq 0 ] ) || [ $(masterAheadCount) -eq 0 ]; then
+ if ( $(hasRemoteBranch) && [ $(originAheadCount) -eq 0 ] ) || [ $(masterAheadCount) -eq 0 ]; then
   prompt $surprisedIcon "Oh no, it is not possible to rename a package labels after it has been shipped" $3;
   echo false;
   return;

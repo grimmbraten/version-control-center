@@ -19,7 +19,7 @@ masterAheadCount() {
 originAheadCount() {
  local branch=$(onBranch);
 
- if $(hasOrigin); then
+ if $(hasRemoteBranch); then
   echo $(git rev-list --right-only --count origin/$branch...$branch);
  else
   echo 0;
@@ -43,7 +43,7 @@ masterBehindCount() {
 originBehindCount() {
  local branch=$(onBranch);
 
- if $(hasOrigin); then
+ if $(hasRemoteBranch); then
   echo $(git rev-list --left-only --count origin/$branch...$branch);
  else
   echo 0;
