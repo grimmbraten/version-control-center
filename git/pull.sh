@@ -12,8 +12,6 @@ pull() {
 
 # $1: boolean (verbose)
 runPullRequest() {
- local icon;
-
  $(runFetchRequest);
  local branch=$(onBranch);
 
@@ -26,7 +24,7 @@ runPullRequest() {
  local behind=$(originBehindCount);
 
  if [ $behind -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$branch)], no pull is needed" $2;
+  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$branch)], no pull is needed" $1s;
   echo false;
   return;
  fi 
