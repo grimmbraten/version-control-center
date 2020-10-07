@@ -9,9 +9,7 @@ stashes() {
 save() {
  spacer;
 
- if [ -z $1 ]; then
-  missing "What title would you like to have for the stash?";
- elif [ ! -z $2 ]; then
+ if [[ -z $1 || ! -z $2 ]]; then
   invalid "gsts <title>";
  else
   $(runSaveRequest $1 true);
@@ -20,35 +18,11 @@ save() {
  spacer;
 }
 
-runSaveRequest() {
- local title=$1;
- local verbose=$2;
-
- if ! $(hasChanges); then
-  prompt $disappointed "Branch contains [no] changes to stash" $verbose;
-  echo false;
-  return;
- fi
-
- if ! $(run "git stash save -u $title"); then
-  echo false;
-  return;
- fi
- 
- local changes=$(changeCount);
-
- prompt $tada "Successfully stashed [$changes] change$(plural $changes) without any issues]" $verbose;
- echo true;
-}
-
 apply() {
  spacer;
 
- if [ -z $1 ]; then
-  #TODO: Make these missing calls into question
-  missing "Which stash would you like to apply?";
- elif [ ! -z $2 ]; then
-  invalid "gsta <stash index>";
+ if [[ -z $1 || ! -z $2 ]]; then
+  invalid "gsta <stash>";
  else
   $(runApplyRequest $1 true);
  fi
@@ -56,28 +30,62 @@ apply() {
  spacer;
 }
 
-runApplyRequest() {
- local stash;
- local index=$1;
- local verbose=$2;
+drop() {
+ spacer;
 
- if $(hasUnstagedChanges); then
-  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $verbose;
+ if [[ -z $1 || ! -z $2 ]]; then
+  invalid "gstd <stash>";
+ else
+  $(runDropRequest $1 true);
+ fi
+
+ spacer;
+}
+
+# $1: string  (title for stash)
+# $2: boolean (verbose)
+runSaveRequest() {
+ if ! $(hasChanges); then
+  prompt $telescopeIcon "Branch does not have any changed files to stash" $2;
   echo false;
   return;
  fi
 
- if ! $(isNaN $index); then
-  stash="stash@{$index}";
+ if ! $(run "git stash save -u $1"); then
+  echo false;
+  return;
+ fi
+ 
+ local changes=$(changeCount);
+
+ prompt $tadaIcon "Successfully stashed [$changes file$(plural $changes)] without any issues]" $2;
+ echo true;
+}
+
+# $1: integer (stash index number)
+# $2: boolean (verbose)
+runApplyRequest() {
+ local index;
+ local stash;
+
+ if $(hasUnstagedChanges); then
+  prompt $constructionIcon "Branch has work in progress _(please resolve current changes before applying stashed changes)]" $2;
+  echo false;
+  return;
+ fi
+
+ if ! $(isNaN $1); then
+  index=$1;
+  stash="stash@{$1}";
  else
-  stash=$index;
-  index=$(getNumberFromString $stash);
+  stash=$1;
+  index=$(getNumberFromString $1);
  fi
 
  local count=$(stashCount);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $disappointed "That stash does not exist" $verbose;
+  prompt $telescopeIcon "[$stash] does not exist in repository" $2;
   return;
  fi
 
@@ -86,42 +94,29 @@ runApplyRequest() {
   return;
  fi
 
- local total=$(changeCount);
-
- prompt $tada "Successfully applied [$changes] stashed change$(plural $changes) without any issues" $verbose;
+ local changes=$(changeCount);
+ prompt $tadaIcon "Successfully applied [$changes stashed file$(plural $changes)] without any issues" $2;
  echo true;
 }
 
-drop() {
- spacer;
-
- if [ -z $1 ]; then
-  missing "Which stash would you like to drop?";
- elif [ ! -z $2 ]; then
-  invalid "gstd <stash index>";
- else
-  $(runDropRequest $1 true);
- fi
-
- spacer;
-}
-
+# $1: integer (stash index number)
+# $2: boolean (verbose)
 runDropRequest() {
+ local index;
  local stash;
- local index=$1;
- local verbose=$2;
 
- if ! $(isNaN $index); then
-  stash="stash@{$index}";
+ if ! $(isNaN $1); then
+  index=$1;
+  stash="stash@{$1}";
  else
-  stash=$index;
-  index=$(getNumberFromString $stash);
+  stash=$1;
+  index=$(getNumberFromString $1);
  fi
 
  local count=$(stashCount);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $disappointed "That stashed does not exist" $verbose;
+  prompt $telescopeIcon "[$stash] does not exist in repository" $2;
   return;
  fi
 
@@ -130,6 +125,6 @@ runDropRequest() {
   return;
  fi
 
- prompt $tada "Successfully dropped [$stash] without any issues" $verbose;
+ prompt $tadaIcon "Successfully dropped [$stash] without any issues" $2;
  echo true;
 }

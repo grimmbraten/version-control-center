@@ -10,37 +10,28 @@ pull() {
  spacer;
 }
 
+# $1: boolean (verbose)
 runPullRequest() {
  local icon;
- local verbose=$1;
 
+ $(runFetchRequest);
  local branch=$(onBranch);
 
- if ! $(hasOrigin); then
-  prompt $construction "Branch does not have a tracked destination" $verbose;
+ if ! $(hasRemoteBranch); then
+  prompt $surprisedIcon "Oh no, branch does not exist on remote repository" $1;
   echo false;
   return;
  fi
 
- if ! $(isBehindOrigin); then
-  local ahead=$(originAheadCount);
+ local behind=$(originBehindCount);
 
-  prompt $tada "Branch is [up to date] with tracked destination _($behind package$(plural $behind)/$ahead package$(plural $ahead))]" $verbose;
+ if [ $behind -eq 0 ]; then
+  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$branch)], no pull is needed" $2;
   echo false;
   return;
  fi 
 
- local behind=$(originBehindCount);
-
- if [ $behind -gt 15 ]; then
-  icon=$ship;
- elif [ $behind -gt 5 ]; then
-  icon=$truck;
- else
-  icon=$car;
- fi
-
- prompt $icon "Receiving [$behind] package$(plural $behind) from tracked destination" $verbose;
+ prompt $(getDeliveryIcon $behind) "Receiving [$behind package$(plural $behind)] from remote branch" $1;
 
  if ! $(run "git pull origin $branch"); then
   echo false;
@@ -48,12 +39,12 @@ runPullRequest() {
  fi
 
  if $(isBehindOrigin); then
-  prompt $boom "Failed to receive packages from tracked exporter" $verbose;
+  prompt $boomIcon "Failed to receive packages from remote branch" $1;
   echo false;
   return;
  fi
  
- prompt $tada "Successfully received [$behind] package$(plural $behind)" $verbose;
+ prompt $tadaIcon "Successfully received [$behind package$(plural $behind)]" $1;
  echo true;
 }
 

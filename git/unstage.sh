@@ -1,12 +1,10 @@
 unstage() {
  spacer;
 
- if [ -z $1 ]; then
-  missing "What folder or file would you like to unbundle?";
- elif [ ! -z $2 ]; then
-  invalid "gu <folder/file>";
- elif $(runUnstageRequest $1 true); then
-  spacer && git status --short;
+ if [[ -z $1 || ! -z $2 ]]; then
+  invalid "gu <target>";
+ else
+  $(runUnstageRequest $1 true);
  fi
 
  spacer;
@@ -24,48 +22,40 @@ unstageAll() {
  spacer;
 }
 
+# $1: string  (targeted file or folder to unstage)
+# $2: boolean (verbose)
 runUnstageRequest() {
- local target=$1;
- local verbose=$2;
+ local query;
 
- local resetType;
- local before=$(stagedCount);
-
- if [ -z $target ]; then
-  resetType="reset";
- elif $(isFile $target); then
-  resetType="reset $target";
+ if [ -z $1 ]; then
+  query="reset";
+ elif $(isFile $1); then
+  query="reset $1";
  else
-  resetType="reset $target/*";
+  query="reset $1/*";
  fi
 
- if ! $(run "git $resetType"); then
+ local before=$(stagedCount);
+
+ if ! $(run "git $query"); then
   echo false;
   return;
  fi
 
  local after=$(stagedCount);
 
- if [ ! -z $target ]; then
-  if $(isFile $target); then
-   target="file";
-  else
-   target="folder";
-  fi
-
+ if [ ! -z $1 ]; then
   diff=$(($before - $after));
  else
   diff=$before;
  fi
 
- local staged=$(stagedCount);
- local total=$(changeCount);
-
  if [ $diff -eq 0 ]; then
-  prompt $disappointed "Could not find any changes to unbundle in that $target _($staged/$total)]" $verbose;
+  prompt $telescopeIcon "$(capitalize $(getTargetType $target)) does not exist in repository" $2;
   echo false;
- else   
-  prompt $package "Unbundling [$diff] file$(plural $diff) from package... _($staged/$total)]" $verbose;
+ else
+  mention "$(git -c color.status=always status --short)\n";
+  prompt $packageIcon "Removed [$diff file$(plural $diff)] from unlabeled package _($(stagedCount)/$(changeCount))]" $2;
   echo true;
  fi
 }

@@ -3,7 +3,9 @@ onBranch() {
 }
 
 aheadCount() {
- if $(hasBranch $1); then
+ if [ -z $1 ]; then
+  echo $(git rev-list --right-only --count $(onBranch)...origin/$(onBranch));
+ elif $(hasBranch $1); then
   echo $(git rev-list --right-only --count $(onBranch)...$1);
  else
   echo 0;
@@ -17,7 +19,7 @@ masterAheadCount() {
 originAheadCount() {
  local branch=$(onBranch);
 
- if $(hasOrigin); then
+ if $(hasRemoteBranch); then
   echo $(git rev-list --right-only --count origin/$branch...$branch);
  else
   echo 0;
@@ -25,7 +27,9 @@ originAheadCount() {
 }
 
 behindCount() {
- if $(hasBranch $1); then
+ if [ -z $1 ]; then
+  echo $(git rev-list --left-only --count $(onBranch)...origin/$(onBranch));
+ elif $(hasBranch $1); then
   echo $(git rev-list --left-only --count $(onBranch)...$1);
  else
   echo 0;
@@ -39,7 +43,7 @@ masterBehindCount() {
 originBehindCount() {
  local branch=$(onBranch);
 
- if $(hasOrigin); then
+ if $(hasRemoteBranch); then
   echo $(git rev-list --left-only --count origin/$branch...$branch);
  else
   echo 0;
@@ -51,7 +55,11 @@ getStashIndexByName() {
 }
 
 identity() {
- echo $(git rev-parse --short HEAD);
+ if [ -z $1 ]; then
+  echo $(git rev-parse --short HEAD);
+ else
+  echo $(git rev-parse --short $1);
+ fi
 }
 
 masterIdentity() {
@@ -90,14 +98,30 @@ hasChanges() {
 }
 
 hasBranch() {
- if [ -n "$(git show-ref refs/heads/$1)" ]; then;
+ if $(hasLocalBranch $1); then
+  echo true;
+ elif $(hasRemoteBranch $1); then
   echo true;
  else
   echo false;
  fi
 }
 
-hasOrigin() {
+hasLocalBranch() {
+ local branch=$(onBranch);
+
+ if [ ! -z $1 ]; then
+  branch=$1;
+ fi
+
+ if [ -n "$(git show-ref refs/heads/$branch)" ]; then;
+  echo true;
+ else
+  echo false;
+ fi
+}
+
+hasRemoteBranch() {
  local branch=$(onBranch);
 
  if [ ! -z $1 ]; then

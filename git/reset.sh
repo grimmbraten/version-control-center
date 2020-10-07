@@ -3,30 +3,11 @@ reset() {
 
  if [ ! -z $1 ]; then
   invalid "gr";
- elif $(confirmIdentity "reset [all] changes"); then
+ elif $(confirmIdentity "reset [all] changes _(this action can not be reverted)]"); then
   $(runResetRequest true);
  fi
 
  spacer;
-}
-
-runResetRequest() {
- local verbose=$1;
-
- if ! $(runResetUntrackedRequest); then
-  prompt $disappointed "Failed to reset [untracked] changes on working branch" $verbose;
-  echo false;
-  return;
- fi
-
- if ! $(runResetTrackedRequest); then
-  prompt $disappointed "Failed to reset [tracked] changes on working branch" $verbose;
-  echo false;
-  return;
- fi
-
- prompt $tada "Successfully reset all [tracked] and [untracked] changes without any issues" $verbose;
- echo true;
 }
 
 resetTracked() {
@@ -34,23 +15,11 @@ resetTracked() {
 
  if [ ! -z $1 ]; then
   invalid "grt";
- elif $(confirmIdentity "reset all [tracked] changes"); then
+ elif $(confirmIdentity "reset all [tracked] changes _(this action can not be reverted)]"); then
   $(runResetTrackedRequest true);
  fi
 
  spacer;
-}
-
-runResetTrackedRequest() {
- local verbose=$1;
-
- if ! $(run "git reset --hard"); then
-  echo false;
-  return;
- fi
-
- prompt $tada "Successfully reset all [tracked] changes without any issues" $verbose;
- echo true;
 }
 
 resetUntracked() {
@@ -58,21 +27,60 @@ resetUntracked() {
 
  if [ ! -z $1 ]; then
   invalid "gru";
- elif $(confirmIdentity "reset all [untracked] changes"); then
+ elif $(confirmIdentity "reset all [untracked] changes _(this action can not be reverted)]"); then
   $(runResetUntrackedRequest true);
  fi
 
  spacer;
 }
 
-runResetUntrackedRequest() {
- local verbose=$1;
+# $1: boolean (verbose)
+runResetRequest() {
+ local changes=$(changeCount);
+ prompt $leafsIcon "Shaking off [$changes file$(plural $changes)] containing changes from $(toLower $(getBranchIconName $changes))" $1;
 
- if ! $(run "git clean -df"); then
+ if ! $(runResetUntrackedRequest); then
+  prompt $boomIcon "Failed to reset [untracked] changes from branch" $1;
   echo false;
   return;
  fi
 
- prompt $tada "Successfully reset all [untracked] changes without any issues" $verbose;
+ if ! $(runResetTrackedRequest); then
+  prompt $boomIcon "Failed to reset [tracked] changes from branch" $1;
+  echo false;
+  return;
+ fi
+
+ prompt $tadaIcon "Successfully pruned off [$changes file$(plural $changes)] without any issues" $1;
+ echo true;
+}
+
+# $1: boolean (verbose)
+runResetTrackedRequest() {
+ local changes=$(stagedCount);
+ prompt $leafsIcon "Shaking off [$changes file$(plural $changes)] containing changes from $(toLower $(getBranchIconName $(changeCount)))" $1;
+
+ if ! $(run "git reset --hard"); then
+  prompt $boomIcon "Failed to reset [tracked] changes from branch" $1;
+  echo false;
+  return;
+ fi
+
+ prompt $tadaIcon "Successfully pruned off [$changes file$(plural $changes)] without any issues" $1;
+ echo true;
+}
+
+# $1: boolean (verbose)
+runResetUntrackedRequest() {
+ local changes=$(unstagedCount);
+ prompt $leafsIcon "Shaking off [$changes file$(plural $changes)] containing changes from $(toLower $(getBranchIconName $(changeCount)))" $1;
+
+ if ! $(run "git clean -df"); then
+  prompt $boomIcon "Failed to reset [untracked] changes from branch" $1;
+  echo false;
+  return;
+ fi
+
+ prompt $tadaIcon "Successfully pruned off [$changes file$(plural $changes)] without any issues" $1;
  echo true;
 }

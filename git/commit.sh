@@ -4,9 +4,7 @@ commit() {
  if ! $(isValidCommit $@); then
   invalid "gc <description> [body]";
  else
-  if $(runCommitRequest $1 "$2" true); then
-   runStatusRequest;
-  fi
+  $(runCommitRequest $1 "$2" true);
  fi
 
  spacer;
@@ -59,75 +57,16 @@ commitAllPush() {
  spacer;
 }
 
-# $1: string(description), $2: string(body), $3 boolean(verbose)
-runCommitRequest() {
- if [ $(onBranch) = master ]; then
-  prompt $lock "Master is protected from direct changes, please create a new branch _(permission denied)]" $3;
-  echo false;
-  return;
- fi
-
- local before=$(stagedCount);
- local description=$(addEmoji $1);
-
- if [ -z $description ]; then
-  prompt $thinking "Could not find a matching commit type, please use [gct] to view all valid commit types" $3;
-  echo false;
-  return;
- fi
- 
- if [ -z $2 ]; then
-  if ! $(run "git commit -m \"$description\""); then
-   echo false;
-   return;
-  fi
- else
-  if ! $(run "git commit -m \"$description\" -m \"$2\""); then
-   echo false;
-   return;
-  fi
- fi
-
- local after=$(stagedCount);
- 
- local changeCount=$(($before - $after));
-
- if [ $changeCount -eq 0 ]; then
-  prompt $disappointed "There are no packages ready to be assigned an identity" $3;
-  echo false;
-  return;
- fi
-
- prompt $package "Assigned [$(identity)] to package containing [$changeCount] file$(plural $changeCount)" $3;
- echo true;
-}
-
 commitUndo() {
  spacer;
 
  if [ ! -z $1 ]; then
   invalid "gcu";
  else
-  if $(runCommitUndoRequest true); then
-   runStatusRequest;
-  fi  
+  $(runCommitUndoRequest true);
  fi
 
  spacer;
-}
-
-# $1: boolean(verbose)
-runCommitUndoRequest() {
- local identity=$(identity);
-
- if ! $(run "git reset --soft HEAD~1"); then
-  echo false;
-  return;
- fi
-
- local stagedCount=$(stagedCount);
- prompt $package "Unassigned [$identity] from package containing [$stagedCount] file$(plural $stagedCount)" $1;
- echo true;
 }
 
 commitRename() {
@@ -142,10 +81,82 @@ commitRename() {
  spacer;
 }
 
-# $1: string(description), $2: string(body), $3: boolean(verbose)
+# $1: string  (label)
+# $2: string  (description)
+# $3: boolean (verbose)
+runCommitRequest() {
+ if [ $(onBranch) = master ]; then
+  prompt $lockIcon "The branch [master] is protected from any direct changes, please create a new branch instead" $3;
+  echo false;
+  return;
+ fi
+
+ local staged=$(stagedCount);
+
+ if [ $staged -eq 0 ]; then
+  prompt $telescopeIcon "There is no package ready to be sealed" $3;
+  echo false;
+  return;
+ fi
+ 
+ local label=$(addEmoji $1);
+
+ if [ -z $label ]; then
+  prompt $skepticIcon "Hmm, the label does not contain a valid commit type" $3;
+  echo false;
+  return;
+ fi
+ 
+ if [ -z $2 ]; then
+  if ! $(run "git commit -m \"$label\""); then
+   echo false;
+   return;
+  fi
+ else
+  if ! $(run "git commit -m \"$label\" -m \"$2\""); then
+   echo false;
+   return;
+  fi
+ fi
+ 
+ if [[ "$3" = true && $(changeCount) -gt 0 ]]; then
+  mention "$(git -c color.status=always status --short)\n";
+ fi
+
+ prompt $tadaIcon "Successfully sealed a package with [$staged file$(plural $staged)]" $3;
+ prompt "   $packageIcon" "[$(identity)]" $3;
+ prompt "   $(getEmojiForConsole $1)" "$(capitalize "$(trim "$(split $1 ":" 2)")")" $3;
+
+ if [ ! -z $2 ]; then
+  prompt "   $descriptionIcon" "$2" $3;
+ fi
+
+ echo true;
+}
+
+# $1: boolean (verbose)
+runCommitUndoRequest() {
+ local identity=$(identity);
+
+ if ! $(run "git reset --soft HEAD~1"); then
+  echo false;
+  return;
+ fi
+ 
+ if [ "$1" = true ]; then
+  mention "$(git -c color.status=always status --short)\n";
+ fi
+
+ prompt $tadaIcon "Successfully removed meta data from package with tracking number [$identity]" $1;
+ echo true;
+}
+
+# $1: string  (label)
+# $2: string  (description)
+# $3: boolean (verbose)
 runCommitRenameRequest() {
- if ( $(hasOrigin) && [ $(originAheadCount) -eq 0 ] ) || [ $(masterAheadCount) -eq 0 ]; then
-  prompt $disappointed "Package description can not be changed after it has been delivered" $3;
+ if ( $(hasRemoteBranch) && [ $(originAheadCount) -eq 0 ] ) || [ $(masterAheadCount) -eq 0 ]; then
+  prompt $surprisedIcon "Oh no, it is not possible to rename a package labels after it has been shipped" $3;
   echo false;
   return;
  fi
@@ -162,24 +173,37 @@ runCommitRenameRequest() {
   fi
  fi
  
- prompt $package "Changed [$(identity)] package description" $3;
+ prompt $tadaIcon "Successfully relabeled package with tracking number [$(identity)]" $3;
  echo true;
 }
 
-addEmoji() {
+addEmoji() { 
  local type=$(split $1 ":" 1);
  local description=$(split $1 ":" 2);
 
  if [ $type != $description ]; then
   while read line; do
    if $(contains $line $type); then
-    echo "$(split $line "=" 2) $(capitalize "$(trim $description)")";
+    echo "$(split $(split $line "-" 1) "=" 2) $(capitalize "$(trim $description)")";
     return;
    fi
   done <$types/commit.txt
  fi
 
  echo "";
+}
+
+getEmojiForConsole() {
+ local type=$(split $1 ":" 1);
+
+ while read line; do
+  if $(contains $line $type); then
+   echo "\\$(split $line "-" 2)";
+   return;
+  fi
+ done <$types/commit.txt
+
+ echo $bookmarkIcon;
 }
 
 isValidCommit() {

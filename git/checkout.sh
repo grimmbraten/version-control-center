@@ -1,9 +1,7 @@
 checkout() {
  spacer;
 
- if [ -z $1 ]; then
-  missing "What branch do you want to checkout?";
- elif [ ! -z $2 ]; then
+ if [[ -z $1 || ! -z $2 ]]; then
   invalid "gch <branch>";
  else
   $(runCheckoutRequest $1 true);
@@ -33,56 +31,15 @@ checkoutPrevious() {
  fi
 
  local branch=$(git rev-parse --symbolic-full-name @{-1});  
- branch=${branch#"refs/heads/"};
-
- $(runCheckoutRequest $branch true);
+ $(runCheckoutRequest ${branch#"refs/heads/"} true);
 
  spacer;
-}
-
-runCheckoutRequest() {
- local target=$1;
- local verbose=$2;
- local branch=$(onBranch);
-
- if $(hasChanges); then
-  $(runSaveRequest $current);  
- fi
-
- if $(hasBranch $target); then
-  if ! $(run "git checkout $target"); then
-   echo false;
-   return;
-  fi
- elif $(hasOrigin $target); then
-  if ! $(run "git checkout -b $target origin/$target"); then
-   echo false;
-   return;
-  fi
- else
-  prompt $disappointed "That branch does not exist" $verbose;
-  echo false;
-  return
- fi
-
- local index=$(getStashIndexByName $target);
-
- if [ ! -z $index ]; then
-  if $(runApplyRequest $index); then
-   $(runDropRequest $index);
-  fi
- fi
-
- prompt $tada "Successfully switched branch from [$branch] to [$target]" $verbose;
- echo true;
 }
 
 checkoutCreateBranch() {
  spacer;
 
- if [ -z $1 ]; then
-  missing "What do you want to name the new branch to?";
- elif [ ! -z $2 ]; then
+ if [[ -z $1 || ! -z $2 ]]; then
   invalid "gchb <branch>";
  else
   $(runCheckoutCreateBranchRequest $1 true);
@@ -91,34 +48,75 @@ checkoutCreateBranch() {
  spacer;
 }
 
-runCheckoutCreateBranchRequest() {
- local branch=$1;
- local verbose=$2;
+# $1: string  (branch to checkout)
+# $2: boolean (verbose)
+runCheckoutRequest() {
+ local toIdentity;
+ local fromIdentity=$(identity);
 
- local type=$(split $branch '/' 1);
+ if $(hasChanges); then
+  $(runSaveRequest $(onBranch));  
+ fi
+
+ if $(hasLocalBranch $1); then
+  toIdentity=$(identity $1);
+
+  if ! $(run "git checkout $1"); then
+   echo false;
+   return;
+  fi
+ elif $(hasRemoteBranch $1); then
+  toIdentity=$(identity origin/$1);
+
+  if ! $(run "git checkout -b $1 origin/$1"); then
+   echo false;
+   return;
+  fi
+ else
+  prompt $surprisedIcon "Oh no, that branch does not exist" $2;
+  echo false;
+  return
+ fi
+
+ local index=$(getStashIndexByName $1);
+
+ if [ ! -z $index ]; then
+  if $(runApplyRequest $index); then
+   $(runDropRequest $index);
+  fi
+ fi
+
+ prompt $tadaIcon "Successfully checked out [$toIdentity] from [$fromIdentity]" $2;
+ echo true;
+}
+
+# $1: string  (branch to create)
+# $2: boolean (verbose)
+runCheckoutCreateBranchRequest() {
+ local type=$(split $1 '/' 1);
 
  if ! $(existsInFile $type $types/branch.txt); then
-  prompt $construction "$type is not a valid branch type, enter [gbp] to display all allowed types" $verbose;
+  prompt $skepticIcon "Hmm, [$type] is not a valid branch type" $2;
   return;
  fi
 
  if $(hasChanges); then
-  prompt $construction "Branch contains changes, please [stash] or [bundle] them before checking out" $verbose;
+  prompt $constructionIcon "You are on a work in progress branch, please [commit or stash] before you checkout" $2;
   echo false;
   return;
  fi
 
- if [[ $(hasBranch $branch) || $(hasOrigin $branch) ]]; then
-  prompt $alarm "Branch already exists" $verbose;
+ if $(hasBranch $1); then
+  prompt $surprisedIcon "Oh no, a branch with that name already exists" $2;
   echo false;
   return;
  fi
 
- if ! $(run "git checkout -b $branch"); then
+ if ! $(run "git checkout -b $(capitalize $1)"); then
   echo false;
   return;
  fi
 
- prompt $tada "Successfully created a new branch" $verbose;
+ prompt $tadaIcon "Successfully created branch without any issues" $2;
  echo true;
 }
