@@ -24,7 +24,7 @@ runPullRequest() {
  local behind=$(originBehindCount);
 
  if [ $behind -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$branch)], no pull is needed" $1s;
+  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$branch)], no pull is needed" $1;
   echo false;
   return;
  fi 
