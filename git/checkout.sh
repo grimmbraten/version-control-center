@@ -100,19 +100,13 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- if $(hasChanges); then
-  prompt $constructionIcon "You are on a work in progress branch, please [commit or stash] before you checkout" $2;
-  echo false;
-  return;
- fi
-
  if $(hasBranch $1); then
   prompt $surprisedIcon "Oh no, a branch with that name already exists" $2;
   echo false;
   return;
  fi
 
- if ! $(run "git checkout -b $(capitalize $1)"); then
+ if ! $(run "git checkout -b $1"); then
   echo false;
   return;
  fi
