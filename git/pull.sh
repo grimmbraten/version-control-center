@@ -16,7 +16,7 @@ runPullRequest() {
  local branch=$(onBranch);
 
  if ! $(hasRemoteBranch); then
-  prompt $surprisedIcon "Oh no, branch does not exist on remote repository" $1;
+  prompt $surprisedIcon "Oh no, local branch _($(identity))] does not have a remote branch" $1;
   echo false;
   return;
  fi
@@ -24,12 +24,12 @@ runPullRequest() {
  local behind=$(originBehindCount);
 
  if [ $behind -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$branch)], no pull is needed" $1;
+  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$branch))]" $1;
   echo false;
   return;
  fi 
 
- prompt $(getDeliveryIcon $behind) "Receiving [$behind package$(plural $behind)] from remote branch" $1;
+ prompt $(getDeliveryIcon $behind) "Receiving [$behind package$(plural $behind)] from remote branch _($(identity origin/$branch))]" $1;
 
  if ! $(run "git pull origin $branch"); then
   echo false;
