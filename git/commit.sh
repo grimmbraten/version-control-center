@@ -113,7 +113,7 @@ runCommitRequest() {
    return;
   fi
  else
-  if ! $(run "git commit -m \"$label\" -m \"$2\""); then
+  if ! $(run "git commit -m \"$label\" -m \"$(capitalize $2)\""); then
    echo false;
    return;
   fi
