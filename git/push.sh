@@ -51,6 +51,8 @@ runPushRequest() {
 
  prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch" $1;
 
+ local previousIdentity=$(identity origin/$onBranch);
+
  if ! $(run "git push origin $onBranch"); then  
   echo false;
   return;   
@@ -62,7 +64,7 @@ runPushRequest() {
   return;
  fi 
 
- prompt $tadaIcon "Successfully delivered _($(identity))] into _($(identity origin/$onBranch))] without any issues" $1;
+ prompt $tadaIcon "Successfully delivered _($(identity))] into _($previousIdentity)] without any issues" $1;
  echo true;
 }
 
