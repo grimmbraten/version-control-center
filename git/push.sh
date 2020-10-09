@@ -49,7 +49,7 @@ runPushRequest() {
   return;
  fi
 
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch _($(identity) -> $(identity origin/$onBranch))]" $1;
+ prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch" $1;
 
  if ! $(run "git push origin $onBranch"); then  
   echo false;
@@ -62,7 +62,7 @@ runPushRequest() {
   return;
  fi 
 
- prompt $tadaIcon "Successfully delivered [$ahead package$(plural $ahead)] without any issues" $1;
+ prompt $tadaIcon "Successfully delivered _($(identity))] into _($(identity origin/$onBranch))] without any issues" $1;
  echo true;
 }
 
@@ -91,6 +91,6 @@ runPushUpstreamRequest() {
   return;   
  fi
 
- prompt $tadaIcon "Successfully delivered [$ahead package$(plural $ahead)] without any issues" $1;
+ prompt $tadaIcon "Successfully delivered _($(identity))] into a new remote branch without any issues" $1;
  echo true;
 }
