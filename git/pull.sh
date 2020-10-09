@@ -16,7 +16,7 @@ runPullRequest() {
  local branch=$(onBranch);
 
  if ! $(hasRemoteBranch); then
-  prompt $surprisedIcon "Oh no, local branch _($(identity))] does not have a remote branch" $1;
+  prompt $constructionIcon "Local branch _($(identity))] does not have a remote branch" $1;
   echo false;
   return;
  fi
@@ -37,12 +37,12 @@ runPullRequest() {
  fi
 
  if $(isBehindOrigin); then
-  prompt $boomIcon "Failed to receive packages from remote branch" $1;
+  prompt $boomIcon "Failed to receive packages, something went wrong along the way" $1;
   echo false;
   return;
  fi
  
- prompt $tadaIcon "Successfully received [$behind package$(plural $behind)]" $1;
+ prompt $tadaIcon "Successfully received [$behind package$(plural $behind)] without any issues" $1;
  echo true;
 }
 

@@ -10,7 +10,6 @@ local packageIcon="\U0001F4E6";
 local tadaIcon="\U0001F389";
 local telescopeIcon="\U0001F52D";
 local thinkingIcon="\U0001F914";
-local skepticIcon="\U0001F928";
 local surprisedIcon="\U000U1F62E";
 
 # push/pull size icons

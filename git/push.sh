@@ -28,7 +28,7 @@ runPushRequest() {
  local onBranch=$(onBranch);
 
  if ! $(hasRemoteBranch); then
-  prompt $surprisedIcon "Oh no, branch does not exist on remote repository" $1;
+  prompt $constructionIcon "Local branch _($(identity))] does not have a remote branch" $1;
   echo false;
   return;
  fi
@@ -36,7 +36,7 @@ runPushRequest() {
  local ahead=$(aheadCount); 
 
  if [ $ahead -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/$onBranch)] _(push is not needed)]" $2;
+  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$branch))]" $1;
   echo false;
   return;
  fi
@@ -44,12 +44,12 @@ runPushRequest() {
  local behind=$(behindCount);
 
  if [ $behind -gt 0 ]; then
-  prompt $alert "Branch is [$behind package$(plural $behind)] behind] remote branch _(please pull before you push)]" $1;
+  prompt $alert "Local branch _($(identity))] is [$behind package$(plural $behind)] behind] remote branch _($(identity origin/$branch))]" $1;
   echo false;
   return;
  fi
 
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch" $1;
+ prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch _($(identity origin/$branch))]" $1;
 
  if ! $(run "git push origin $onBranch"); then  
   echo false;
@@ -71,7 +71,7 @@ runPushUpstreamRequest() {
  local onBranch=$(onBranch);
 
  if $(hasRemoteBranch); then
-  prompt $telescopeIcon "Detected an already existing remote branch, using normal push instead" $1;
+  prompt $telescopeIcon "Detected existing remote branch _($(identity origin/$branch))], switching to use regular push" $1;
   echo $(runPushRequest true);
   return;
  fi
@@ -79,12 +79,12 @@ runPushUpstreamRequest() {
  local ahead=$(masterAheadCount);
 
  if [ $ahead -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with [$(identity origin/master)] _(push upstream is not needed)]" $1;
+  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$branch))]" $1;
   echo false;
   return;
  fi
 
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] and creating a new remote branch" $1;
+ prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to a new remote branch" $1;
 
  if ! $(run "git push --set-upstream origin $onBranch"); then
   echo false;

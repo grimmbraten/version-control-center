@@ -102,7 +102,7 @@ runCommitRequest() {
  local label=$(addEmoji $1);
 
  if [ -z $label ]; then
-  prompt $skepticIcon "Hmm, the label does not contain a valid commit type" $3;
+  prompt $alert "Package label does not contain a valid commit type" $3;
   echo false;
   return;
  fi
