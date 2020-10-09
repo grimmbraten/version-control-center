@@ -49,7 +49,7 @@ runPushRequest() {
   return;
  fi
 
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch _($(identity origin/$onBranch))]" $1;
+ prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch _($(identity) -> $(identity origin/$onBranch))]" $1;
 
  if ! $(run "git push origin $onBranch"); then  
   echo false;
@@ -84,7 +84,7 @@ runPushUpstreamRequest() {
   return;
  fi
 
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote _($(repositoryUrl))]" $1;
+ prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote _($(identity) -> $(repositoryUrl))]" $1;
 
  if ! $(run "git push --set-upstream origin $onBranch"); then
   echo false;
