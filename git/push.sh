@@ -33,7 +33,7 @@ runPushRequest() {
   return;
  fi
 
- local ahead=$(aheadCount); 
+ local ahead=$(localAheadCount); 
 
  if [ $ahead -eq 0 ]; then
   prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$onBranch))]" $1;
@@ -41,7 +41,7 @@ runPushRequest() {
   return;
  fi
 
- local behind=$(behindCount);
+ local behind=$(localBehindCount);
 
  if [ $behind -gt 0 ]; then
   prompt $alert "Local branch _($(identity))] is [$behind package$(plural $behind)] behind] remote branch _($(identity origin/$onBranch))]" $1;

@@ -43,7 +43,7 @@ runMergeRequest() {
   return
  fi
 
- if [ $(behindCount $target) -eq 0 ]; then
+ if [ $(localBehindCount $target) -eq 0 ]; then
   prompt $tadaIcon "Branch is already [up to date] with [$(identity $target)], no merge is needed" $2;
   echo false;
   return;
