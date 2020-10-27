@@ -19,7 +19,7 @@ runPullRequest() {
  fi
 
  local branch=$(onBranch);
- local behind=$(originBehindCount);
+ local behind=$(localBehindCount);
 
  if [ $behind -eq 0 ]; then
   prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote origin _($(identity origin/$branch))]" $1;
