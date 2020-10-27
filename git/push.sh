@@ -80,7 +80,7 @@ runPushUpstreamRequest() {
 
  local changes=$(masterBehindCount); 
 
- prompt $buildingConstructionIcon "Creating remote origin for local branch _($(identity))]" $1;
+ prompt $buildingConstructionIcon " Creating remote origin for local branch _($(identity))]" $1;
  
  if [ $changes -gt 0 ]; then
   prompt $(getDeliveryIcon $changes) "Delivering [$changes package$(plural $changes)] to remote origin" $1;
