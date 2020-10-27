@@ -12,28 +12,24 @@ pull() {
 
 # $1: boolean (verbose)
 runPullRequest() {
- $(runFetchRequest);
- local branch=$(onBranch);
-
  if ! $(hasRemoteBranch); then
-  prompt $constructionIcon "Local branch _($(identity))] does not have a remote branch" $1;
+  prompt $constructionIcon "Local branch _($(identity))] does not yet have a remote origin" $1;
   echo false;
   return;
  fi
 
+ local branch=$(onBranch);
  local behind=$(originBehindCount);
 
  if [ $behind -eq 0 ]; then
-  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$branch))]" $1;
+  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote origin _($(identity origin/$branch))]" $1;
   echo false;
   return;
  fi 
 
- prompt $(getDeliveryIcon $behind) "Receiving [$behind package$(plural $behind)] from remote branch" $1;
+ prompt $(getDeliveryIcon $behind) "Receiving [$behind package$(plural $behind)] from remote origin _($(identity))]" $1;
 
- local previousIdentity=$(identity);
-
- if ! $(run "git pull origin $branch"); then
+ if ! $(run "git pull origin $onBranch"); then
   echo false;
   return;
  fi
@@ -44,7 +40,7 @@ runPullRequest() {
   return;
  fi
 
- prompt $tadaIcon "Successfully received _($(identity))] into _($previousIdentity)] without any issues" $1;
+ prompt $tadaIcon "Successfully received package$(plural $behind) from remote origin" $1;
  echo true;
 }
 
