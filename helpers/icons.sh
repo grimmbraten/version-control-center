@@ -20,7 +20,7 @@ local truckIcon="\U0001F69A";
 local carIcon="\U0001F699";
 local scooterIcon="\U0001F6F5";
 local bicycleIcon="\U0001F6B2";
-local buildingConstructionIcon "\U0001F3D7";
+local buildingConstructionIcon="\U0001F3D7";
 
 # branch size icons
 local evergreenIcon="\U0001F332";
