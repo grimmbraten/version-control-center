@@ -96,7 +96,7 @@ runCheckoutCreateBranchRequest() {
  local type=$(split $1 '/' 1);
 
  if ! $(existsInFile $type $types/branch.txt); then
-  prompt $skepticIcon "Hmm, [$type] is not a valid branch type" $2;
+  prompt $alert "[$type] is not a valid branch type" $2;
   return;
  fi
 

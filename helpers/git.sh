@@ -2,49 +2,47 @@ onBranch() {
  echo $(git branch --show-current);
 }
 
-aheadCount() {
+localAheadCount() {
  if [ -z $1 ]; then
-  echo $(git rev-list --right-only --count $(onBranch)...origin/$(onBranch));
+  echo $(git rev-list --right-only --count origin/$(onBranch)...$(onBranch));
  elif $(hasBranch $1); then
-  echo $(git rev-list --right-only --count $(onBranch)...$1);
+  echo $(git rev-list --right-only --count $1...$(onBranch));
  else
   echo 0;
  fi
 }
 
 masterAheadCount() {
- echo $(git rev-list --right-only --count origin/master...$(onBranch));
+ echo $(git rev-list --right-only --count $(onBranch)...origin/master);
 }
 
 originAheadCount() {
- local branch=$(onBranch);
-
- if $(hasRemoteBranch); then
-  echo $(git rev-list --right-only --count origin/$branch...$branch);
+ if [ -z $1 ]; then
+  echo $(git rev-list --right-only --count $(onBranch)...origin/$(onBranch));
  else
   echo 0;
  fi
 }
 
-behindCount() {
+localBehindCount() {
  if [ -z $1 ]; then
-  echo $(git rev-list --left-only --count $(onBranch)...origin/$(onBranch));
+  echo $(git rev-list --left-only --count origin/$(onBranch)...$(onBranch));
  elif $(hasBranch $1); then
-  echo $(git rev-list --left-only --count $(onBranch)...$1);
+  echo $(git rev-list --left-only --count $1...$(onBranch));
  else
   echo 0;
  fi
 }
 
 masterBehindCount() {
- echo $(git rev-list --left-only --count origin/master...$(onBranch));
+ echo $(git rev-list --left-only --count $(onBranch)...origin/master);
 }
 
 originBehindCount() {
  local branch=$(onBranch);
 
  if $(hasRemoteBranch); then
-  echo $(git rev-list --left-only --count origin/$branch...$branch);
+  echo $(git rev-list --left-only --count $(onBranch)...origin/$(onBranch));
  else
   echo 0;
  fi

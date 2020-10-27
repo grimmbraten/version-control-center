@@ -102,7 +102,7 @@ runCommitRequest() {
  local label=$(addEmoji $1);
 
  if [ -z $label ]; then
-  prompt $skepticIcon "Hmm, the label does not contain a valid commit type" $3;
+  prompt $alert "Package label does not contain a valid commit type" $3;
   echo false;
   return;
  fi
@@ -113,7 +113,7 @@ runCommitRequest() {
    return;
   fi
  else
-  if ! $(run "git commit -m \"$label\" -m \"$2\""); then
+  if ! $(run "git commit -m \"$label\" -m \"$(capitalize $2)\""); then
    echo false;
    return;
   fi
