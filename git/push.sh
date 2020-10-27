@@ -25,18 +25,17 @@ pushUpstream() {
 
 # $1: boolean (verbose)
 runPushRequest() {
- local onBranch=$(onBranch);
-
  if ! $(hasRemoteBranch); then
-  prompt $constructionIcon "Local branch _($(identity))] does not have a remote branch" $1;
+  prompt $constructionIcon "Local branch _($(identity))] does not yet have a remote origin" $1;
   echo false;
   return;
  fi
 
+ local onBranch=$(onBranch);
  local ahead=$(localAheadCount); 
 
  if [ $ahead -eq 0 ]; then
-  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$onBranch))]" $1;
+  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote origin _($(identity origin/$onBranch))]" $1;
   echo false;
   return;
  fi
@@ -44,12 +43,12 @@ runPushRequest() {
  local behind=$(localBehindCount);
 
  if [ $behind -gt 0 ]; then
-  prompt $alert "Local branch _($(identity))] is [$behind package$(plural $behind)] behind] remote branch _($(identity origin/$onBranch))]" $1;
+  prompt $alert "Local branch _($(identity))] is [$behind package$(plural $behind)] behind] remote origin _($(identity origin/$onBranch))]" $1;
   echo false;
   return;
  fi
 
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote branch" $1;
+ prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote origin _($(identity origin/$onBranch))]" $1;
 
  local previousIdentity=$(identity origin/$onBranch);
 
@@ -64,7 +63,7 @@ runPushRequest() {
   return;
  fi 
 
- prompt $tadaIcon "Successfully delivered _($(identity))] into _($previousIdentity)] without any issues" $1;
+ prompt $tadaIcon "Successfully delivered local branch _($(identity))] into remote origin _($previousIdentity)] without any issues" $1;
  echo true;
 }
 
@@ -73,26 +72,25 @@ runPushUpstreamRequest() {
  local onBranch=$(onBranch);
 
  if $(hasRemoteBranch); then
-  prompt $telescopeIcon "Detected existing remote branch _($(identity origin/$onBranch))], switching to use regular push" $1;
-  echo $(runPushRequest true);
+  prompt $telescopeIcon "Detected remote origin _($(identity origin/$onBranch))]" $1;
+  #TODO: Create a question prompt asking if the user wants to use regular push instead
+  #echo $(runPushRequest true);
   return;
  fi
 
  local ahead=$(masterAheadCount);
 
  if [ $ahead -eq 0 ]; then
-  prompt $tadaIcon "Local branch _($(identity))] is already [up to date] with remote branch _($(identity origin/$branch))]" $1;
-  echo false;
-  return;
+  prompt $(getDeliveryIcon $ahead) "Creating a new remote origin for local branch _($(identity))]" $1;
+ else  
+  prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] into new remote origin" $1;
  fi
-
- prompt $(getDeliveryIcon $ahead) "Delivering [$ahead package$(plural $ahead)] to remote _($(identity) -> $(repositoryUrl))]" $1;
 
  if ! $(run "git push --set-upstream origin $onBranch"); then
   echo false;
   return;   
  fi
 
- prompt $tadaIcon "Successfully delivered _($(identity))] into a new remote branch without any issues" $1;
+ prompt $tadaIcon "Successfully delivered _($(identity))] into a new remote branch _$(identity origin/$onBranch))] without any issues" $1;
  echo true;
 }
