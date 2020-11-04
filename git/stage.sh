@@ -1,30 +1,10 @@
 stage() {
- spacer;
-
  if [[ -z $1 || ! -z $2 ]]; then
   invalid "ga <target> ";
- else
-  $(runStageRequest $1 true);
+  echo false;
+  return;
  fi
 
- spacer;
-}
-
-stageAll() {
- spacer;
-
- if [ ! -z $1 ]; then
-  invalid "gaa";
- else
-  $(runStageRequest . true);
- fi
-
- spacer;
-}
-
-# $1: string  (targeted file or folder to stage)
-# $2: boolean (verbose)
-runStageRequest() { 
  local diff;
  local before=$(unstagedCount);
 
@@ -42,11 +22,19 @@ runStageRequest() {
  fi
  
  if [ $diff -eq 0 ]; then
-  prompt $telescopeIcon "Could not find $(getTargetType $target)" $2;
+  prompt $telescopeIcon "Could not find $(getTargetType $target)";
   echo false;
  else
   mention "$(git -c color.status=always status --short)\n";
-  prompt $packageIcon "Added [$diff] file$(plural $diff) to package _($(stagedCount)/$(changeCount))]" $2;
+  prompt $packageIcon "Added [$diff] file$(plural $diff) to package _($(stagedCount)/$(changeCount))]";
   echo true;
- fi  
+ fi 
+}
+
+stage-all() {
+ if [ ! -z $1 ]; then
+  invalid "gaa";
+ else
+  $(stage .);
+ fi
 }

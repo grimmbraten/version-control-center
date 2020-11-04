@@ -61,7 +61,7 @@ if [ -d .git ]; then
  alias gru=reset-untracked;
 
  alias ga=stage;
- alias gaa=stageAll;
+ alias gaa=stage-all;
 
  alias gst=stashes;
  alias gsts=save;
