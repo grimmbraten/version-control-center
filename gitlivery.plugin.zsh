@@ -30,9 +30,9 @@ if [ -d .git ]; then
  alias gbdo=branch-delete-origin;
 
  alias gch=checkout;
- alias gchb=checkoutCreateBranch;
- alias gchm=checkoutMaster;
- alias gchp=checkoutPrevious;
+ alias gchb=checkout-branch;
+ alias gchm=checkout-master;
+ alias gchp=checkout-previous;
 
  alias gc=commit;
  alias gct="cat $types/commit.txt | sed s/"%"//";
