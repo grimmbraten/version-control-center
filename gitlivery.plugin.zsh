@@ -49,7 +49,7 @@ if [ -d .git ]; then
  alias gl=logs
 
  alias gm=merge;
- alias gmm=mergeMaster;
+ alias gmm=merge-master;
 
  alias gpl=pull;
 
