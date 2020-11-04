@@ -63,10 +63,10 @@ if [ -d .git ]; then
  alias ga=stage;
  alias gaa=stage-all;
 
- alias gst=stashes;
- alias gsts=save;
- alias gsta=apply;
- alias gstd=drop;
+ alias gst=stash;
+ alias gsts=stash-save;
+ alias gstd=stash-drop;
+ alias gsta=stash-apply;
  
  alias gs=status;
  alias gsd=statusDetailed;
