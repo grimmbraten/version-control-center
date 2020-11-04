@@ -51,11 +51,11 @@ runUnstageRequest() {
  fi
 
  if [ $diff -eq 0 ]; then
-  prompt $telescopeIcon "$(capitalize $(getTargetType $target)) does not exist in repository" $2;
+  prompt $telescopeIcon "could not find $(getTargetType $target)" $2;
   echo false;
  else
   mention "$(git -c color.status=always status --short)\n";
-  prompt $packageIcon "Removed [$diff file$(plural $diff)] from unlabeled package _($(stagedCount)/$(changeCount))]" $2;
+  prompt $packageIcon "Removed [$diff] file$(plural $diff) from package _($(stagedCount)/$(changeCount))]" $2;
   echo true;
  fi
 }
