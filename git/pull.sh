@@ -1,19 +1,12 @@
 pull() {
- spacer;
-
  if [ ! -z $1 ]; then
   invalid "gpl";
- else
-  $(runPullRequest true);
+  echo false;
+  return;
  fi
 
- spacer;
-}
-
-# $1: boolean (verbose)
-runPullRequest() {
  if ! $(hasRemoteBranch); then
-  prompt $constructionIcon "Branch does not have a remote origin" $1;
+  prompt $constructionIcon "Branch does not have a remote origin";
   echo false;
   return;
  fi
@@ -22,12 +15,12 @@ runPullRequest() {
  local behind=$(localBehindCount);
 
  if [ $behind -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with remote origin" $1;
+  prompt $tadaIcon "Branch is already [up to date] with remote origin";
   echo false;
   return;
  fi 
 
- prompt $(getDeliveryIcon $behind) "Receiving [$behind] package$(plural $behind)" $1;
+ prompt $(getDeliveryIcon $behind) "Receiving [$behind] package$(plural $behind)";
 
  if ! $(run "git pull origin $onBranch"); then
   echo false;
@@ -35,12 +28,11 @@ runPullRequest() {
  fi
 
  if $(isBehindOrigin); then
-  prompt $boomIcon "Failed to receive package$(plural $behind)" $1;
+  prompt $boomIcon "Failed to receive package$(plural $behind)";
   echo false;
   return;
  fi
 
- prompt $tadaIcon "Successfully received package$(plural $behind)" $1;
+ prompt $tadaIcon "Successfully received package$(plural $behind)";
  echo true;
 }
-
