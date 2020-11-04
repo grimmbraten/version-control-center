@@ -20,13 +20,14 @@ if [ -d .git ]; then
   fi 
  }
 
- alias gb=branches;
  alias gbt="cat $types/branch.txt | sed s/"%"//";
  alias gbte="nano $types/branch.txt";
- alias gbo=branchOrigins;
- alias gbr=branchRename;
- alias gbd=deleteBranch;
- alias gbdo=deleteBranchOrigin;
+
+ alias gb=branch;
+ alias gbo=branch-origins;
+ alias gbr=branch-rename;
+ alias gbd=branch-delete;
+ alias gbdo=branch-delete-origin;
 
  alias gch=checkout;
  alias gchb=checkoutCreateBranch;
