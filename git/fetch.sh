@@ -17,6 +17,6 @@ runFetchRequest() {
   return;
  fi
 
- prompt $tadaIcon "Successfully updated branch references with remote" $1;
+ prompt $tadaIcon "Successfully synchronized references" $1;
  echo true;
 }
