@@ -34,14 +34,15 @@ if [ -d .git ]; then
  alias gchm=checkout-master;
  alias gchp=checkout-previous;
 
- alias gc=commit;
  alias gct="cat $types/commit.txt | sed s/"%"//";
  alias gcte="nano $types/commit.txt";
- alias gcu=commitUndo;
- alias gcp=commitPush;
- alias gcr=commitRename;
- alias gca=commitAll;
- alias gcap=commitAllPush;
+
+ alias gc=commit;
+ alias gca=commit-all;
+ alias gcu=commit-undo;
+ alias gcp=commit-push;
+ alias gcr=commit-rename;
+ alias gcap=commit-all-push;
 
  alias gf=fetch;
 
