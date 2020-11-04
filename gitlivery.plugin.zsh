@@ -22,6 +22,8 @@ if [ -d .git ]; then
 
  alias gbt="cat $types/branch.txt | sed s/"%"//";
  alias gbte="nano $types/branch.txt";
+ alias gct="cat $types/commit.txt | sed s/"%"//";
+ alias gcte="nano $types/commit.txt";
 
  alias gb=branch;
  alias gbo=branch-origins;
@@ -33,9 +35,6 @@ if [ -d .git ]; then
  alias gchb=checkout-branch;
  alias gchm=checkout-master;
  alias gchp=checkout-previous;
-
- alias gct="cat $types/commit.txt | sed s/"%"//";
- alias gcte="nano $types/commit.txt";
 
  alias gc=commit;
  alias gca=commit-all;
@@ -70,12 +69,7 @@ if [ -d .git ]; then
  
  alias gs=status;
  alias gsd=status-detailed;
- 
- alias gsa=originAheadCount;
- alias gsb=originBehindCount;
- alias gsam=masterAheadCount;
- alias gsbm=masterBehindCount;
 
  alias gu=unstage;
- alias gua=unstageAll;
+ alias gua=unstage-all;
 fi
