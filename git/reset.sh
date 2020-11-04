@@ -37,36 +37,36 @@ resetUntracked() {
 # $1: boolean (verbose)
 runResetRequest() {
  local changes=$(changeCount);
- prompt $leafsIcon "Shaking off [$changes file$(plural $changes)] containing changes from $(toLower $(getBranchIconName $changes))" $1;
+ prompt $leafsIcon "Shaking off [$changes] file$(plural $changes) from $(toLower $(getBranchIconName $changes))" $1;
 
  if ! $(runResetUntrackedRequest); then
-  prompt $boomIcon "Failed to reset [untracked] changes from branch" $1;
+  prompt $boomIcon "Failed to prune [untracked] changes" $1;
   echo false;
   return;
  fi
 
  if ! $(runResetTrackedRequest); then
-  prompt $boomIcon "Failed to reset [tracked] changes from branch" $1;
+  prompt $boomIcon "Failed to prune [tracked] changes" $1;
   echo false;
   return;
  fi
 
- prompt $tadaIcon "Successfully pruned off [$changes file$(plural $changes)] without any issues" $1;
+ prompt $tadaIcon "Successfully pruned [$changes] file$(plural $changes)" $1;
  echo true;
 }
 
 # $1: boolean (verbose)
 runResetTrackedRequest() {
  local changes=$(stagedCount);
- prompt $leafsIcon "Shaking off [$changes file$(plural $changes)] containing changes from $(toLower $(getBranchIconName $(changeCount)))" $1;
+ prompt $leafsIcon "Shaking off [$changes] file$(plural $changes) from $(toLower $(getBranchIconName $(changeCount)))" $1;
 
  if ! $(run "git reset --hard"); then
-  prompt $boomIcon "Failed to reset [tracked] changes from branch" $1;
+  prompt $boomIcon "Failed to prune [tracked] changes" $1;
   echo false;
   return;
  fi
 
- prompt $tadaIcon "Successfully pruned off [$changes file$(plural $changes)] without any issues" $1;
+ prompt $tadaIcon "Successfully pruned [$changes] file$(plural $changes)" $1;
  echo true;
 }
 
@@ -76,11 +76,11 @@ runResetUntrackedRequest() {
  prompt $leafsIcon "Shaking off [$changes file$(plural $changes)] containing changes from $(toLower $(getBranchIconName $(changeCount)))" $1;
 
  if ! $(run "git clean -df"); then
-  prompt $boomIcon "Failed to reset [untracked] changes from branch" $1;
+  prompt $boomIcon "Failed to prune [untracked] changes" $1;
   echo false;
   return;
  fi
 
- prompt $tadaIcon "Successfully pruned off [$changes file$(plural $changes)] without any issues" $1;
+ prompt $tadaIcon "Successfully pruned [$changes] file$(plural $changes)" $1;
  echo true;
 }
