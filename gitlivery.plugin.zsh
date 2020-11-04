@@ -57,8 +57,8 @@ if [ -d .git ]; then
  alias gpu=push-upstream;
 
  alias gr=reset;
- alias grt=resetTracked;
- alias gru=resetUntracked;
+ alias grt=reset-tracked;
+ alias gru=reset-untracked;
 
  alias ga=stage;
  alias gaa=stageAll;
