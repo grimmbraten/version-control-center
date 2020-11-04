@@ -69,7 +69,8 @@ if [ -d .git ]; then
  alias gsta=stash-apply;
  
  alias gs=status;
- alias gsd=statusDetailed;
+ alias gsd=status-detailed;
+ 
  alias gsa=originAheadCount;
  alias gsb=originBehindCount;
  alias gsam=masterAheadCount;
