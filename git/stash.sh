@@ -46,7 +46,7 @@ drop() {
 # $2: boolean (verbose)
 runSaveRequest() {
  if ! $(hasChanges); then
-  prompt $telescopeIcon "Branch does not have any changed files to stash" $2;
+  prompt $telescopeIcon "Branch does not have any changes" $2;
   echo false;
   return;
  fi
@@ -58,7 +58,7 @@ runSaveRequest() {
  
  local changes=$(changeCount);
 
- prompt $tadaIcon "Successfully stashed [$changes file$(plural $changes)] without any issues]" $2;
+ prompt $tadaIcon "Successfully stashed [$changes] file$(plural $changes)" $2;
  echo true;
 }
 
@@ -69,7 +69,7 @@ runApplyRequest() {
  local stash;
 
  if $(hasUnstagedChanges); then
-  prompt $constructionIcon "Branch has work in progress _(please resolve current changes before applying stashed changes)]" $2;
+  prompt $constructionIcon "Branch has work in progress" $2;
   echo false;
   return;
  fi
@@ -85,7 +85,7 @@ runApplyRequest() {
  local count=$(stashCount);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $telescopeIcon "[$stash] does not exist in repository" $2;
+  prompt $telescopeIcon "[$stash] does not exist" $2;
   return;
  fi
 
@@ -95,7 +95,7 @@ runApplyRequest() {
  fi
 
  local changes=$(changeCount);
- prompt $tadaIcon "Successfully applied [$changes stashed file$(plural $changes)] without any issues" $2;
+ prompt $tadaIcon "Successfully applied [$changes] stashed file$(plural $changes)" $2;
  echo true;
 }
 
@@ -116,7 +116,7 @@ runDropRequest() {
  local count=$(stashCount);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $telescopeIcon "[$stash] does not exist in repository" $2;
+  prompt $telescopeIcon "[$stash] does not exist" $2;
   return;
  fi
 
@@ -125,6 +125,6 @@ runDropRequest() {
   return;
  fi
 
- prompt $tadaIcon "Successfully dropped [$stash] without any issues" $2;
+ prompt $tadaIcon "Successfully dropped [$stash]" $2;
  echo true;
 }

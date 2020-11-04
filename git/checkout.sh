@@ -73,7 +73,7 @@ runCheckoutRequest() {
    return;
   fi
  else
-  prompt $surprisedIcon "Oh no, that branch does not exist" $2;
+  prompt $surprisedIcon "Branch does not exist" $2;
   echo false;
   return
  fi
@@ -86,7 +86,7 @@ runCheckoutRequest() {
   fi
  fi
 
- prompt $tadaIcon "Successfully checked out [$toIdentity] from [$fromIdentity]" $2;
+ prompt $tadaIcon "Successfully checked out _($toIdentity)]" $2;
  echo true;
 }
 
@@ -96,12 +96,12 @@ runCheckoutCreateBranchRequest() {
  local type=$(split $1 '/' 1);
 
  if ! $(existsInFile $type $types/branch.txt); then
-  prompt $alert "[$type] is not a valid branch type" $2;
+  prompt $alert "[$type] is not a valid prefix" $2;
   return;
  fi
 
  if $(hasBranch $1); then
-  prompt $surprisedIcon "Oh no, a branch with that name already exists" $2;
+  prompt $surprisedIcon "Branch already exists" $2;
   echo false;
   return;
  fi
@@ -111,6 +111,6 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- prompt $tadaIcon "Successfully created branch without any issues" $2;
+ prompt $tadaIcon "Successfully created branch" $2;
  echo true;
 }

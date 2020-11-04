@@ -86,7 +86,7 @@ commitRename() {
 # $3: boolean (verbose)
 runCommitRequest() {
  if [ $(onBranch) = master ]; then
-  prompt $lockIcon "The branch [master] is protected from any direct changes, please create a new branch instead" $3;
+  prompt $lockIcon "Branch [master] is protected from changes" $3;
   echo false;
   return;
  fi
@@ -94,7 +94,7 @@ runCommitRequest() {
  local staged=$(stagedCount);
 
  if [ $staged -eq 0 ]; then
-  prompt $telescopeIcon "There is no package ready to be sealed" $3;
+  prompt $telescopeIcon "No package ready to be sealed" $3;
   echo false;
   return;
  fi
@@ -102,9 +102,7 @@ runCommitRequest() {
  local label=$(addEmoji $1);
 
  if [ -z $label ]; then
-  prompt $alert "Package label does not contain a valid commit type" $3;
-  echo false;
-  return;
+  label=$1;
  fi
  
  if [ -z $2 ]; then
@@ -123,12 +121,12 @@ runCommitRequest() {
   mention "$(git -c color.status=always status --short)\n";
  fi
 
- prompt $tadaIcon "Successfully sealed a package with [$staged file$(plural $staged)]" $3;
- prompt "   $packageIcon" "[$(identity)]" $3;
- prompt "   $(getEmojiForConsole $1)" "$(capitalize "$(trim "$(split $1 ":" 2)")")" $3;
+ prompt $tadaIcon "Successfully sealed package with [$staged] file$(plural $staged)" $3;
+ prompt $packageIcon "[$(identity)]" $3;
+ prompt $(getEmojiForConsole $1) "$(trim "$(split $1 ":" 2)")" $3;
 
  if [ ! -z $2 ]; then
-  prompt "   $descriptionIcon" "$2" $3;
+  prompt $descriptionIcon "$2" $3;
  fi
 
  echo true;
@@ -138,16 +136,21 @@ runCommitRequest() {
 runCommitUndoRequest() {
  local identity=$(identity);
 
+ local before=$(stagedCount);
+
  if ! $(run "git reset --soft HEAD~1"); then
   echo false;
   return;
  fi
+
+ local after=$(stagedCount);
+ local undone=$(($after - $before));
  
  if [ "$1" = true ]; then
   mention "$(git -c color.status=always status --short)\n";
  fi
 
- prompt $tadaIcon "Successfully removed meta data from package with tracking number [$identity]" $1;
+ prompt $tadaIcon "Successfully unsealed package with [$undone] file$(plural $undone)" $3;
  echo true;
 }
 
@@ -156,7 +159,7 @@ runCommitUndoRequest() {
 # $3: boolean (verbose)
 runCommitRenameRequest() {
  if ( $(hasRemoteBranch) && [ $(originAheadCount) -eq 0 ] ) || [ $(masterAheadCount) -eq 0 ]; then
-  prompt $surprisedIcon "Oh no, it is not possible to rename a package labels after it has been shipped" $3;
+  prompt $surprisedIcon "Unable to rename package after it has been delivered" $3;
   echo false;
   return;
  fi
@@ -173,7 +176,7 @@ runCommitRenameRequest() {
   fi
  fi
  
- prompt $tadaIcon "Successfully relabeled package with tracking number [$(identity)]" $3;
+ prompt $tadaIcon "Successfully relabeled package _($(identity)]" $3;
  echo true;
 }
 
@@ -184,7 +187,7 @@ addEmoji() {
  if [ $type != $description ]; then
   while read line; do
    if $(contains $line $type); then
-    echo "$(split $(split $line "-" 1) "=" 2) $(capitalize "$(trim $description)")";
+    echo "$(split $(split $line "-" 1) "=" 2) $(trim $description)";
     return;
    fi
   done <$types/commit.txt

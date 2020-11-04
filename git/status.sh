@@ -29,6 +29,6 @@ runStatusRequest() {
    spacer;
   fi
   
-  prompt $(getBranchIcon $changes) "$(getBranchIconName $changes) with [$changes file$(plural $changes)] _($(unstagedCount)/$(stagedCount))]" true;
+  prompt $(getBranchIcon $changes) "$(getBranchIconName $changes) with [$changes] file$(plural $changes) _($(unstagedCount)/$(stagedCount))]" true;
  fi
 }

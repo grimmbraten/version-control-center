@@ -40,7 +40,7 @@ deleteBranch() {
  if [ ! -z $2 ]; then
   invalid "gbd [name]";
  elif [ $1 = master ]; then
-  prompt $lockIcon "The [master] branch is protected from being deleted" true;
+  prompt $lockIcon "Branch [master] is protected" true;
  elif [ $1 = $(onBranch) ]; then
   $(processDeleteBranchRequest $(onBranch) true);
  else
@@ -56,7 +56,7 @@ deleteBranchOrigin() {
  if [[ -z $1 && ! -z $2 ]]; then
   invalid "gbdo <name>";
  elif [ $1 = master ]; then
-  prompt $lockIcon "The [master] branch is protected from being deleted" true;
+  prompt $lockIcon "Branch [master] branch is protected" true;
  else
   $(runDeleteBranchOriginRequest $1 true);
  fi
@@ -70,27 +70,25 @@ runBranchRenameRequest() {
  local type=$(split $1 '/' 1);
 
  if ! $(existsInFile $type $types/branch.txt); then
-  prompt $alert "[$type] is not a valid branch type" $2;
+  prompt $alert "[$type] is not a valid prefix" $2;
   return;
  fi
 
- local newBranchName=$(capitalize $1);
-
- if $(hasBranch $newBranchName); then
-  prompt $surprisedIcon "Oh no, a branch with that name already exists" $2;
+ if $(hasBranch $1); then
+  prompt $surprisedIcon "Branch already exists" $2;
   echo false;
   return;
  fi
 
  local branch=$(onBranch);
 
- if ! $(run "git branch -m $newBranchName"); then
+ if ! $(run "git branch -m $1"); then
   echo false;
   return;
  fi
 
  if $(hasRemoteBranch $branch); then
-  if $(question "Do you also want to rename the remote branch?"); then
+  if $(question "Do you want to delete the remote branch?"); then
    if ! $(runPushUpstreamRequest true); then    
     echo false;
     return;
@@ -103,7 +101,7 @@ runBranchRenameRequest() {
   fi
  fi
 
- prompt $tadaIcon "Successfully renamed [$(identity)] without any issues" $2;
+ prompt $tadaIcon "Successfully renamed _($(identity))]" $2;
  echo true;
 }
 
@@ -117,13 +115,13 @@ runDeleteBranchRequest() {
  fi
 
  if ! $(run "git branch -D $1"); then
-  prompt $boomIcon "Failed to delete [$identity]" $2;
+  prompt $boomIcon "Failed to delete _($identity)]" $2;
   echo false;
   return;
  fi  
 
  if $(hasRemoteBranch $1); then
-  if $(question "Do you also want to delete the remote branch?"); then
+  if $(question "Do you want to delete the remote branch?"); then
    if ! $(runDeleteBranchOriginRequest $1 true); then  
     echo false;
     return;
@@ -131,7 +129,7 @@ runDeleteBranchRequest() {
   fi
  fi
 
- prompt $tadaIcon "Successfully deleted [$identity] without any issues" $2;
+ prompt $tadaIcon "Successfully deleted _($identity)]" $2;
  echo true;
 }
 
@@ -139,7 +137,7 @@ runDeleteBranchRequest() {
 # $2: boolean (verbose)
 runDeleteBranchOriginRequest() {
  if ! $(hasRemoteBranch $1); then
-  prompt $surprisedIcon "Oh no, [$1] does not exist in the remote repository" $2;
+  prompt $surprisedIcon "Remote origin does not exist" $2;
   echo false;
   return;
  fi
@@ -149,6 +147,6 @@ runDeleteBranchOriginRequest() {
   return;
  fi
 
- prompt $tadaIcon "Successfully deleted [$(identity origin/$1)] from remote without any issues" $2;
+ prompt $tadaIcon "Successfully deleted _($(identity origin/$1))]" $2;
  echo true;
 }

@@ -42,11 +42,11 @@ runStageRequest() {
  fi
  
  if [ $diff -eq 0 ]; then
-  prompt $telescopeIcon "$(capitalize $(getTargetType $target)) does not exist in repository" $2;
+  prompt $telescopeIcon "Could not find $(getTargetType $target)" $2;
   echo false;
  else
   mention "$(git -c color.status=always status --short)\n";
-  prompt $packageIcon "Added [$diff file$(plural $diff)] to unlabeled package _($(stagedCount)/$(changeCount))]" $2;
+  prompt $packageIcon "Added [$diff] file$(plural $diff) to package _($(stagedCount)/$(changeCount))]" $2;
   echo true;
  fi  
 }

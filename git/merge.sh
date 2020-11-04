@@ -28,7 +28,7 @@ runMergeRequest() {
  local target;
 
  if $(hasChanges); then
-  prompt $constructionIcon "You are on a work in progress branch, please [commit or stash] before you merge" $2;
+  prompt $constructionIcon "Branch has work in progress" $2;
   echo false;
   return;
  fi
@@ -38,13 +38,13 @@ runMergeRequest() {
  elif $(hasRemoteBranch $1); then
   target="origin/$1";
  else
-  prompt $surprisedIcon "Oh no, that branch does not exist" $2;
+  prompt $surprisedIcon "Branch does not exist" $2;
   echo false;
   return
  fi
 
  if [ $(localBehindCount $target) -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with [$(identity $target)], no merge is needed" $2;
+  prompt $tadaIcon "Branch is already [up to date] with branch _($(identity $target)]" $2;
   echo false;
   return;
  fi
@@ -54,6 +54,6 @@ runMergeRequest() {
   return;
  fi
  
- prompt $tadaIcon "Successfully merged [$(identity $target)] into [$(identity)] without any issues" $2;
+ prompt $tadaIcon "Successfully merged _($(identity $target))]" $2;
  echo true;
 }
