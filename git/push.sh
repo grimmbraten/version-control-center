@@ -94,6 +94,9 @@ runPushUpstreamRequest() {
  else
   prompt $tadaIcon "Successfully built remote origin" $1;
  fi
+
+ #TODO: Add a prompt to output branch url so that the user can visit the remote origin easily
+ # https://github.com/GITHUB_USERNAME/PROJECT_NAME/tree/BRANCH_NAME
  
  echo true;
 }
