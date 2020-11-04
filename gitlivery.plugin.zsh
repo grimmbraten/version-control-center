@@ -54,7 +54,7 @@ if [ -d .git ]; then
  alias gpl=pull;
 
  alias gp=push;
- alias gpu=pushUpstream;
+ alias gpu=push-upstream;
 
  alias gr=reset;
  alias grt=resetTracked;
