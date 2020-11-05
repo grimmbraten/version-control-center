@@ -1,30 +1,10 @@
 unstage() {
- spacer;
-
  if [[ -z $1 || ! -z $2 ]]; then
   invalid "gu <target>";
- else
-  $(runUnstageRequest $1 true);
+  echo false;
+  return;
  fi
 
- spacer;
-}
-
-unstageAll() {
- spacer;
-
- if [ ! -z $1 ]; then
-  invalid "gua";
- else
-  $(runUnstageRequest "" true);
- fi
-
- spacer;
-}
-
-# $1: string  (targeted file or folder to unstage)
-# $2: boolean (verbose)
-runUnstageRequest() {
  local query;
 
  if [ -z $1 ]; then
@@ -51,11 +31,19 @@ runUnstageRequest() {
  fi
 
  if [ $diff -eq 0 ]; then
-  prompt $telescopeIcon "could not find $(getTargetType $target)" $2;
+  prompt $telescopeIcon "could not find $(getTargetType $target)";
   echo false;
  else
   mention "$(git -c color.status=always status --short)\n";
-  prompt $packageIcon "Removed [$diff] file$(plural $diff) from package _($(stagedCount)/$(changeCount))]" $2;
+  prompt $packageIcon "Removed [$diff] file$(plural $diff) from package _($(stagedCount)/$(changeCount))]";
   echo true;
+ fi
+}
+
+unstage-all() {
+ if [ ! -z $1 ]; then
+  invalid "gua";
+ else
+  $(unstage "");
  fi
 }

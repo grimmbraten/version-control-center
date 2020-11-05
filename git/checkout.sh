@@ -1,56 +1,10 @@
 checkout() {
- spacer;
-
  if [[ -z $1 || ! -z $2 ]]; then
   invalid "gch <branch>";
- else
-  $(runCheckoutRequest $1 true);
- fi
-
- spacer;
-}
-
-checkoutMaster() {
- spacer;
-
- if [ ! -z $1 ]; then
-  invalid "gchm";
- else
-  $(runCheckoutRequest master true);
- fi
-
- spacer;
-}
-
-checkoutPrevious() {
- spacer;
-
- if [ ! -z $1 ]; then
-  invalid "gchp";
+  echo false;
   return;
  fi
 
- local branch=$(git rev-parse --symbolic-full-name @{-1});  
- $(runCheckoutRequest ${branch#"refs/heads/"} true);
-
- spacer;
-}
-
-checkoutCreateBranch() {
- spacer;
-
- if [[ -z $1 || ! -z $2 ]]; then
-  invalid "gchb <branch>";
- else
-  $(runCheckoutCreateBranchRequest $1 true);
- fi
-
- spacer;
-}
-
-# $1: string  (branch to checkout)
-# $2: boolean (verbose)
-runCheckoutRequest() {
  local toIdentity;
  local fromIdentity=$(identity);
 
@@ -73,7 +27,7 @@ runCheckoutRequest() {
    return;
   fi
  else
-  prompt $surprisedIcon "Branch does not exist" $2;
+  prompt $surprisedIcon "Branch does not exist";
   echo false;
   return
  fi
@@ -86,22 +40,43 @@ runCheckoutRequest() {
   fi
  fi
 
- prompt $tadaIcon "Successfully checked out _($toIdentity)]" $2;
+ prompt $tadaIcon "Successfully checked out _($toIdentity)]";
  echo true;
 }
 
-# $1: string  (branch to create)
-# $2: boolean (verbose)
-runCheckoutCreateBranchRequest() {
+checkout-master() {
+ if [ ! -z $1 ]; then
+  invalid "gchm";
+ else
+  $(checkout master);
+ fi
+}
+
+checkout-previous() {
+ if [ ! -z $1 ]; then
+  invalid "gchp";
+ else
+  local branch=$(git rev-parse --symbolic-full-name @{-1});  
+  $(checkout ${branch#"refs/heads/"});
+ fi
+}
+
+checkout-branch() {
+ if [[ -z $1 || ! -z $2 ]]; then
+  invalid "gchb <branch>";
+  echo false;
+  return;
+ fi
+
  local type=$(split $1 '/' 1);
 
  if ! $(existsInFile $type $types/branch.txt); then
-  prompt $alert "[$type] is not a valid prefix" $2;
+  prompt $alert "[$type] is not a valid prefix";
   return;
  fi
 
  if $(hasBranch $1); then
-  prompt $surprisedIcon "Branch already exists" $2;
+  prompt $surprisedIcon "Branch already exists";
   echo false;
   return;
  fi
@@ -111,6 +86,6 @@ runCheckoutCreateBranchRequest() {
   return;
  fi
 
- prompt $tadaIcon "Successfully created branch" $2;
+ prompt $tadaIcon "Successfully created branch";
  echo true;
 }

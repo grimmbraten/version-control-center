@@ -1,34 +1,14 @@
 merge() {
- spacer;
-
  if [[ -z $1 || ! -z $2 ]]; then
   invalid "gm <branch>";
- else
-  $(runMergeRequest $1 true);
+  echo false;
+  return;
  fi
 
- spacer;
-}
-
-mergeMaster() {
- spacer;
-
- if [ ! -z $1 ]; then
-  invalid "gmm";
- else
-  $(merge master true);
- fi
-
- spacer;
-}
-
-# $1: string  (branch to merge)
-# $2: boolean (verbose)
-runMergeRequest() {
  local target;
 
  if $(hasChanges); then
-  prompt $constructionIcon "Branch has work in progress" $2;
+  prompt $constructionIcon "Branch has work in progress";
   echo false;
   return;
  fi
@@ -38,13 +18,13 @@ runMergeRequest() {
  elif $(hasRemoteBranch $1); then
   target="origin/$1";
  else
-  prompt $surprisedIcon "Branch does not exist" $2;
+  prompt $surprisedIcon "Branch does not exist";
   echo false;
   return
  fi
 
  if [ $(localBehindCount $target) -eq 0 ]; then
-  prompt $tadaIcon "Branch is already [up to date] with branch _($(identity $target)]" $2;
+  prompt $tadaIcon "Branch is already [up to date] with branch _($(identity $target)]";
   echo false;
   return;
  fi
@@ -54,6 +34,14 @@ runMergeRequest() {
   return;
  fi
  
- prompt $tadaIcon "Successfully merged _($(identity $target))]" $2;
+ prompt $tadaIcon "Successfully merged _($(identity $target))]";
  echo true;
+}
+
+merge-master() {
+ if [ ! -z $1 ]; then
+  invalid "gmm";
+ else
+  $(merge master);
+ fi
 }

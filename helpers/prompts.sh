@@ -25,9 +25,8 @@ invalid() {
 
 # $1: string  (unicode icon)
 # $2: string  (message)
-# $3: boolean (verbose)
 prompt() {
- if [ ! -z $1 ] && [ ! -z $2 ] && [ ! -z $3 ] && $3; then
+ if [[ ! -z $1 && ! -z $2 ]]; then
   echo "$1 $(applyColors "$2")" >&2;
  fi
 }

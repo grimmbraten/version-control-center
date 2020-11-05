@@ -20,59 +20,56 @@ if [ -d .git ]; then
   fi 
  }
 
- alias gb=branches;
  alias gbt="cat $types/branch.txt | sed s/"%"//";
  alias gbte="nano $types/branch.txt";
- alias gbo=branchOrigins;
- alias gbr=branchRename;
- alias gbd=deleteBranch;
- alias gbdo=deleteBranchOrigin;
-
- alias gch=checkout;
- alias gchb=checkoutCreateBranch;
- alias gchm=checkoutMaster;
- alias gchp=checkoutPrevious;
-
- alias gc=commit;
  alias gct="cat $types/commit.txt | sed s/"%"//";
  alias gcte="nano $types/commit.txt";
- alias gcu=commitUndo;
- alias gcp=commitPush;
- alias gcr=commitRename;
- alias gca=commitAll;
- alias gcap=commitAllPush;
+
+ alias gb=branch;
+ alias gbo=branch-origins;
+ alias gbr=branch-rename;
+ alias gbd=branch-delete;
+ alias gbdo=branch-delete-origin;
+
+ alias gch=checkout;
+ alias gchb=checkout-branch;
+ alias gchm=checkout-master;
+ alias gchp=checkout-previous;
+
+ alias gc=commit;
+ alias gca=commit-all;
+ alias gcu=commit-undo;
+ alias gcp=commit-push;
+ alias gcr=commit-rename;
+ alias gcap=commit-all-push;
 
  alias gf=fetch;
 
  alias gl=logs
 
  alias gm=merge;
- alias gmm=mergeMaster;
+ alias gmm=merge-master;
 
  alias gpl=pull;
 
  alias gp=push;
- alias gpu=pushUpstream;
+ alias gpu=push-upstream;
 
  alias gr=reset;
- alias grt=resetTracked;
- alias gru=resetUntracked;
+ alias grt=reset-tracked;
+ alias gru=reset-untracked;
 
  alias ga=stage;
- alias gaa=stageAll;
+ alias gaa=stage-all;
 
- alias gst=stashes;
- alias gsts=save;
- alias gsta=apply;
- alias gstd=drop;
+ alias gst=stash;
+ alias gsts=stash-save;
+ alias gstd=stash-drop;
+ alias gsta=stash-apply;
  
  alias gs=status;
- alias gsd=statusDetailed;
- alias gsa=originAheadCount;
- alias gsb=originBehindCount;
- alias gsam=masterAheadCount;
- alias gsbm=masterBehindCount;
+ alias gsd=status-detailed;
 
  alias gu=unstage;
- alias gua=unstageAll;
+ alias gua=unstage-all;
 fi

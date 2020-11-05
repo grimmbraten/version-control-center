@@ -1,34 +1,24 @@
 status() {
- spacer;
-
- if [ -z $1 ]; then
-  runStatusRequest true;
- else
+ if [ ! -z $1 ]; then
   invalid "gs";
+  return;
  fi
 
- spacer;
-}
-
-statusDetailed() {
- if [ -z $1 ]; then
-  spacer && git status && spacer;
- else
-  invalid "gsd";
- fi
-}
-
-# $1: boolean (verbose)
-runStatusRequest() {
  git status --short;
 
- if [ "$1" = true ]; then
-  local changes=$(changeCount);
+ local changes=$(changeCount);
   
-  if [ $changes -gt 0 ]; then
-   spacer;
-  fi
+ if [ $changes -gt 0 ]; then
+  spacer;
+ fi
   
-  prompt $(getBranchIcon $changes) "$(getBranchIconName $changes) with [$changes] file$(plural $changes) _($(unstagedCount)/$(stagedCount))]" true;
+ prompt $(getBranchIcon $changes) "$(getBranchIconName $changes) with [$changes] file$(plural $changes) _($(unstagedCount)/$(stagedCount))]";
+}
+
+status-detailed() {
+ if [ -z $1 ]; then
+  git status;
+ else
+  invalid "gsd";
  fi
 }
