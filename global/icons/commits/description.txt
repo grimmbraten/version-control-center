@@ -1,0 +1,23 @@
+Introduce new features
+Fix a bug
+Critical hotfix
+Fix CI Build
+Add or update the UI and style files
+Refactor code
+Add or update tests
+Add or update documentation
+Catch errors
+Move or rename resources (e.g.: files, paths, routes)
+Introduce breaking changes
+Update code due to external API changes
+Work in progress
+Deprecate code that needs to be cleaned up
+Improve user experience / usability
+Mock things
+Fix compiler / linter warnings
+Begin a project
+Add or update a .gitignore file
+Fix typos
+Fix security issues
+Improve performance
+Remove code or files

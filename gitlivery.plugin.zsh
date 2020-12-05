@@ -1,75 +1,12 @@
-if [ -d .git ]; then
+local root=$(dirname "$0");
 
- local root=$(dirname "$0");
- . $root/config/bundler.sh;
- . $root/helpers/bundler.sh;
- . $root/git/bundler.sh;
+. $root/global/bundler.sh;
+. $root/helpers/bundler.sh;
+. $root/events/bundler.sh;
 
- # $1: string (git query)
- run() {
-  local response=$(eval "$1 2>&1");
+. $root/core/bundler.sh;
+. $root/functions/bundler.sh;
 
-  if [ $? -eq 0 ]; then
-   if ( $(contains "$response" "error") || $(contains "$response" "fatal") ); then
-    error "$1";
-    mention "$response" true;
-    echo false;
-   else
-    echo true;
-   fi
-  fi 
- }
+. $root/commands/abbreviations.sh
 
- alias gbt="cat $types/branch.txt | sed s/"%"//";
- alias gbte="nano $types/branch.txt";
- alias gct="cat $types/commit.txt | sed s/"%"//";
- alias gcte="nano $types/commit.txt";
-
- alias gb=branch;
- alias gbo=branch-origins;
- alias gbr=branch-rename;
- alias gbd=branch-delete;
- alias gbdo=branch-delete-origin;
-
- alias gch=checkout;
- alias gchb=checkout-branch;
- alias gchm=checkout-master;
- alias gchp=checkout-previous;
-
- alias gc=commit;
- alias gca=commit-all;
- alias gcu=commit-undo;
- alias gcp=commit-push;
- alias gcr=commit-rename;
- alias gcap=commit-all-push;
-
- alias gf=fetch;
-
- alias gl=logs
-
- alias gm=merge;
- alias gmm=merge-master;
-
- alias gpl=pull;
-
- alias gp=push;
- alias gpu=push-upstream;
-
- alias gr=reset;
- alias grt=reset-tracked;
- alias gru=reset-untracked;
-
- alias ga=stage;
- alias gaa=stage-all;
-
- alias gst=stash;
- alias gsts=stash-save;
- alias gstd=stash-drop;
- alias gsta=stash-apply;
- 
- alias gs=status;
- alias gsd=status-detailed;
-
- alias gu=unstage;
- alias gua=unstage-all;
-fi
+#TODO: This startup file should be used to load settings and other plugin related customizations
