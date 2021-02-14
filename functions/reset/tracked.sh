@@ -6,8 +6,8 @@ reset-tracked() {
   return;
  fi
 
- local changes=$(bundled-leafs);
- prompt $leafsIcon "Shaking off *$changes. file$(pluralize $changes) from $(toLower $(plant-name $(leafs)))";
+ local changes=$(staged);
+ prompt $leafs "Shaking off *$changes. file$(pluralize $changes) from $(toLower $(plant-name $(changes)))";
 
  if ! $(run "git reset --hard"); then
   error "Failed to prune *tracked. changes";

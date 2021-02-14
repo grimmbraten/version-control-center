@@ -7,23 +7,23 @@ merge() {
   return;
  fi
 
- if $(has-leafs); then
-  prompt $constructionIcon $hasWorkInProgress;
+ if $(has-changes); then
+  prompt $construction $hasWorkInProgress;
   echo false;
   return;
  fi
 
- if $(plant-exists $1); then
+ if $(local-exists $1); then
   target=$1;
- elif $(plant-origin-exists $1); then
+ elif $(remote-exists $1); then
   target="origin/$1";
  else
-  prompt $seeNoEvilIcon $branchDoesNotExist;
+  prompt $telescope $branchDoesNotExist;
   echo false;
   return
  fi
 
- if [ $(plant-behind $target) -eq 0 ]; then
+ if [ $(behind-local $target) -eq 0 ]; then
   successfully "Already *up to date. with $target #($(plant-breed $target)";
   echo false;
   return;

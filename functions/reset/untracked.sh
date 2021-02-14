@@ -8,8 +8,8 @@ reset-untracked() {
   return;
  fi
  
- local changes=$(unbundled-leafs);
- prompt $leafsIcon "Shaking off *$changes. file$(pluralize $changes) containing changes from $(toLower $(plant-name $(leafs)))";
+ local changes=$(unstaged);
+ prompt $leafs "Shaking off *$changes. file$(pluralize $changes) containing changes from $(toLower $(plant-name $(changes)))";
 
  if ! $(run "git clean -df"); then
   error "Failed to prune *untracked. changes";

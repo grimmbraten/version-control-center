@@ -5,9 +5,9 @@ branch-rename() {
   return;
  fi
 
- if $(plant-exists $1); then
+ if $(local-exists $1); then
   #TODO Get plant icon and name to prompt instead
-  prompt $surprisedIcon $branchExists;
+  prompt $compass $branchExists;
   echo false;
   return;
  fi
@@ -21,7 +21,7 @@ branch-rename() {
   return;
  fi
 
- if $(plant-origin-exists $plant); then
+ if $(remote-exists $plant); then
   if $(question "Do you want to delete the remote origin?"); then
    if ! $(push-upstream); then    
     echo false;

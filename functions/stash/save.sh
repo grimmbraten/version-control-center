@@ -5,8 +5,8 @@ stash-save() {
   return;
  fi
  
- if ! $(has-leafs); then
-  prompt $telescopeIcon "Branch does not have any changes";
+ if ! $(has-changes); then
+  prompt $telescope "Branch does not have any changes";
   echo false;
   return;
  fi
@@ -16,7 +16,7 @@ stash-save() {
   return;
  fi
  
- local changes=$(leafs);
+ local changes=$(changes);
 
  successfully "Stashed *$changes. file$(pluralize $changes)";
  echo true;

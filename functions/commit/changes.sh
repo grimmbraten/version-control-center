@@ -11,42 +11,37 @@ commit() {
   return;
  fi
 
- local staged=$(bundled-leafs);
+ local staged=$(staged);
 
- if $(zero $staged); then
-  prompt $telescopeIcon "No package ready to be sealed";
+ if $(isZero $staged); then
+  prompt $telescope "No package ready to be sealed";
   echo false;
   return;
  fi
  
- local label=$(addEmoji $1);
-
- if $(empty $label); then
-  label=$1;
- fi
- 
- if  $(empty $2); then
-  if ! $(run "git commit -m \"$label\""); then
+ if  $(isEmpty $2); then
+  if ! $(run "git commit -m \"$1\""); then
    echo false;
    return;
   fi
  else
-  if ! $(run "git commit -m \"$label\" -m \"$(capitalize $2)\""); then
+  if ! $(run "git commit -m \"$1\" -m \"$(capitalize $2)\""); then
    echo false;
    return;
   fi
  fi
  
- if [ $(leafs) -gt 0 ]; then
+ if [ $(changes) -gt 0 ]; then
   $(status-list true);
  fi
 
  successfully "Sealed package with *$staged. file$(pluralize $staged)";
- prompt $packageIcon "*$(plant-breed)";
- prompt $(getEmojiForConsole $1) "$(trim "$(split $1 ":" 2)")";
+ prompt $package "*$(plant-breed)";
+ prompt $package "$(trim "$(split $1 ":" 2)")";
+ #TODO change this icon
 
- if ! $(empty $2); then
-  prompt $descriptionIcon "$2";
+ if ! $(isEmpty $2); then
+  prompt $package "$2";
  fi
 
  echo true;

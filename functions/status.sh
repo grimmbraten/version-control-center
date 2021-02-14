@@ -3,29 +3,29 @@ status() {
   invalid;
   return;
  fi
-
- local changes=$(leafs);
   
- if [ $changes -gt 0 ]; then
-  $(status-list true);
- fi
+ $(status-list true);
 
- spacer;
+ local commits=$(plant-size);
   
- prompt $(plant-icon $changes) "$(plant-name $changes) with *$changes. file$(pluralize $changes) #($(unbundled-leafs)/$(bundled-leafs))";
+ prompt $(plant-icon) "$(plant-name) with **$commits.. commit$(pluralize $commits) ##($(unstaged)/$(staged))..";
 }
 
 status-detailed() {
  if $(isCalledWithNoArguments $@); then
   #TODO, make detailed status custom instead of using default git status command
   #Example, have lines below describing behind/ahead of origin/master etc.
-  git status;
+  mention "$(git status)";
  else
   invalid;
  fi
 }
 
 status-list() {
+ if [ $(changes) -eq 0 ]; then
+  return;
+ fi
+
  if [ "$1" = "true" ]; then
   mention "$(git -c color.status=always status --short)\n";
  else

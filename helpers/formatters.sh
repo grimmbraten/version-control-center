@@ -1,14 +1,14 @@
 
 # $1: string (highlight syntax)
-color() {
+format() {
  local text=$1;
- text=${text//\*/$white}
- text=${text//\#/$gray}
- text=${text//\!/$yellow}
- text=${text//\@/$blue}
- text=${text//\+/$green}
- text=${text//\§/$red}
- echo ${text//\./$base}
+ text=${text//\*\*/$white}
+ text=${text//\#\#/$gray}
+ text=${text//\!\!/$yellow}
+ text=${text//\?\?/$blue}
+ text=${text//\+\+/$green}
+ text=${text//\-\-/$red}
+ echo ${text//\.\./$base}
 }
 
 # $1: string (text to split)
@@ -18,30 +18,30 @@ split() {
  echo "$1" | cut -d $2 -f$3;
 }
 
-# $1: string (text to trim)
+# returns the passed value trimmed from trailing whitespace
 trim() {
  if [ $1 != "" ]; then
   echo $1 | xargs;
  fi
 }
 
-# $1: string (text to convert to uppercase)
+# returns the passed value in all uppercase
 toUpper() {
  echo "$1" | tr '[:lower:]' '[:upper:]';
 }
 
-# $1: string (text to convert to lowercase)
+# returns the passed value in all lowercase
 toLower() {
  echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
-# $1: string (text to convert the first letter to uppercase)
+# returns the passed value with the first character capitalized
 capitalize() {
  local string=$1;
  echo $(tr '[:lower:]' '[:upper:]' <<< ${string:0:1})${string:1};
 }
 
-# $1: integer (amount of things)
+# returns an "s" if the passed value does not equal one
 pluralize() {
  if [ $1 -eq 1 ]; then
   echo "";
@@ -50,7 +50,7 @@ pluralize() {
  fi
 }
 
-# $1: string (text to extract number from)
+# returns a number extracted from the passed value
 parseInt() {
  local string=$1;
  echo "${string//[^0-9]/}";

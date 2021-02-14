@@ -5,8 +5,8 @@ push-upstream() {
   return;
  fi
 
- if $(plant-origin-exists $(growing-plant)); then
-  prompt $telescopeIcon $remoteOriginAlreadyExists;
+ if $(remote-exists $(growing-plant)); then
+  prompt $telescope $remoteOriginAlreadyExists;
   #TODO: Create a question prompt asking if the user wants to use regular push instead
   #echo $(runPushRequest true);
   return;
@@ -14,9 +14,9 @@ push-upstream() {
 
  local changes=$(packages-ahead-of-master); 
 
- prompt $buildingConstructionIcon " Building remote origin";
+ prompt $crane " Building remote origin";
  
- if ! $(zero $changes); then
+ if ! $(isZero $changes); then
   prompt $(getDeliveryIcon $changes) "Delivering *$changes. package$(pluralize $changes)";
  fi
 
@@ -26,7 +26,7 @@ push-upstream() {
   return;   
  fi
  
- if ! $(zero $changes); then
+ if ! $(isZero $changes); then
   successfully "Delivered package$(pluralize $changes)";
  else
   successfully "Built remote origin";

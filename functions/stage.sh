@@ -6,14 +6,14 @@ stage() {
  fi
 
  local diff;
- local before=$(unbundled-leafs);
+ local before=$(unstaged);
 
  if ! $(run "git add $1"); then
   echo false;
   return;
  fi
 
- local after=$(unbundled-leafs);
+ local after=$(unstaged);
  
  if [ $1 != . ]; then
   diff=$(($before - $after));
@@ -21,12 +21,13 @@ stage() {
   diff=$before;
  fi
  
- if $(zero $diff); then
-  prompt $telescopeIcon "Could not find $(targetType $target)";
+ if $(isZero $diff); then
+  prompt $telescope "Could not find $(targetType $target)";
   echo false;
  else
   $(status-list true);
-  prompt $packageIcon "Bundled *$diff. file$(pluralize $diff) to package #($(bundled-leafs)/$(leafs))";
+  #TODO: Change "package" to bundle branches / sprouts? depending on commit sice
+  prompt $package "Bundled **$diff.. file$(pluralize $diff) to package #($(staged)/$(changes))";
   echo true;
  fi 
 }

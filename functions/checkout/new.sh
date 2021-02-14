@@ -5,7 +5,7 @@ checkout-new-branch() {
   return;
  fi
 
- if $(plant-exists $1); then
+ if $(local-exists $1); then
   prompt $(plant-icon $(packages-ahead-of-master $(plant-breed $1))) "$(plant-name $(packages-ahead-of-master $(plant-breed $1))) already exists";
   echo false;
   return;

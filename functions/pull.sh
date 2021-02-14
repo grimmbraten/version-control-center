@@ -5,34 +5,33 @@ pull() {
   return;
  fi
 
- if ! $(plant-origin-exists); then
-  prompt $seeNoEvilIcon $remoteOriginDoesNotExist;
+ if ! $(remote-exists); then
+  prompt $leafs $remoteOriginDoesNotExist;
   echo false;
   return;
  fi
 
- local behind=$(plant-behind);
+ local behind=$(behind-local);
 
- if $(zero $behind); then
-  #TODO Replace branch with actual name of plant
-  successfully "Branch is [up to date] with remote origin";
+ if $(isZero $behind); then
+  prompt $(plant-icon) "$(plant-name) is already $upToDateWithRemote $mutedRepoUrl";
   echo false;
   return;
  fi 
 
- prompt $(getDeliveryIcon $behind) "Receiving *$behind. package$(pluralize $behind)";
+ prompt $(getDeliveryIcon $behind) "Receiving **$behind.. plant anatomy and morphology update$(pluralize $behind)";
 
  if ! $(run "git pull origin $(growing-plant)"); then
   echo false;
   return;
  fi
 
- if $(plant-origin-behind); then
-  error "Failed to receive package$(pluralize $behind)";
+ if $(local-behind-remote); then
+  error "Failed to update plant$(pluralize $behind)";
   echo false;
   return;
  fi
 
- successfully "Received package$(pluralize $behind)";
+ prompt $(plant-icon) "$(plant-name) is now $upToDateWithRemote $mutedRepoUrl";
  echo true;
 }

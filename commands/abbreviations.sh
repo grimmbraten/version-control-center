@@ -1,8 +1,3 @@
-alias gbt="cat $types/branch.txt | sed s/"%"//";
-alias gbte="nano $types/branch.txt";
-alias gct="cat $types/commit.txt | sed s/"%"//";
-alias gcte="nano $types/commit.txt";
-
 alias gb='prep branch';
 alias gbo='prep branch-origins';
 alias gbr='prep branch-rename';

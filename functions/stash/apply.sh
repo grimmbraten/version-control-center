@@ -9,7 +9,7 @@ stash-apply() {
  local stash;
 
  if $(hasUnstagedChanges); then
-  prompt $constructionIcon $hasWorkInProgress;
+  prompt $construction $hasWorkInProgress;
   echo false;
   return;
  fi
@@ -22,10 +22,10 @@ stash-apply() {
   index=$(parseInt $1);
  fi
 
- local count=$(seeds);
+ local count=$(stash-count);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $telescopeIcon "*$stash. does not exist";
+  prompt $telescope "*$stash. does not exist";
   return;
  fi
 
@@ -34,7 +34,7 @@ stash-apply() {
   return;
  fi
 
- local changes=$(leafs);
+ local changes=$(changes);
  successfully "Applied *$changes. stashed file$(pluralize $changes)";
  echo true;
 }

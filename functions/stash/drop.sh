@@ -16,10 +16,10 @@ stash-drop() {
   index=$(parseInt $1);
  fi
 
- local count=$(seeds);
+ local count=$(stash-count);
 
  if [ $index -gt $(($count - 1)) ]; then
-  prompt $telescopeIcon "*$stash. does not exist";
+  prompt $telescope "*$stash. does not exist";
   return;
  fi
 

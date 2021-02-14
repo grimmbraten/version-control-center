@@ -8,8 +8,8 @@ reset() {
   return;
  fi
 
- local changes=$(leafs);
- prompt $leafsIcon "Shaking off *$changes. file$(pluralize $changes) from $(toLower $(plant-name $changes))";
+ local changes=$(changes);
+ prompt $leafs "Shaking off *$changes. file$(pluralize $changes) from $(toLower $(plant-name $changes))";
 
  if ! $(reset-untracked); then
   error "Failed to prune *untracked. changes";

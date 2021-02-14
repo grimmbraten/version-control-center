@@ -5,19 +5,19 @@ commit-rename() {
   return;
  fi
 
- if ( $(plant-origin-exists $(growing-plant)) && [ $(plant-origin-ahead) -eq 0 ] ) || [ $(forest-ahead) -eq 0 ]; then
-  prompt $seeNoEvilIcon "Package has already been delivered";
+ if ( $(remote-exists $(growing-plant)) && [ $(remote-ahead) -eq 0 ] ) || [ $(local-behind-master) -eq 0 ]; then
+  prompt $telescope "Package has already been delivered";
   echo false;
   return;
  fi
  
- if $(empty $2); then
-  if ! $(run "git commit --amend -m \"$(addEmoji $1)\""); then
+ if $(isEmpty $2); then
+  if ! $(run "git commit --amend -m \"$1\""); then
    echo false;
    return;
   fi
  else
-  if ! $(run "git commit --amend -m \"$(addEmoji $1)\" -m \"$2\""); then
+  if ! $(run "git commit --amend -m \"$1\" -m \"$2\""); then
    echo false;
    return;
   fi

@@ -7,7 +7,7 @@ unstage() {
 
  local query;
 
- if $(empty $1); then
+ if $(isEmpty $1); then
   query="reset";
  elif $(isFile $1); then
   query="reset $1";
@@ -15,27 +15,27 @@ unstage() {
   query="reset $1/*";
  fi
 
- local before=$(bundled-leafs);
+ local before=$(staged);
 
  if ! $(run "git $query"); then
   echo false;
   return;
  fi
 
- local after=$(bundled-leafs);
+ local after=$(staged);
 
- if ! $(empty $1); then
+ if ! $(isEmpty $1); then
   diff=$(($before - $after));
  else
   diff=$before;
  fi
 
- if $(zero $diff); then
-  prompt $telescopeIcon "could not find $(targetType $target)";
+ if $(isZero $diff); then
+  prompt $telescope "could not find $(targetType $target)";
   echo false;
  else
   $(status-list true);
-  prompt $packageIcon "Unbundled *$diff. file$(pluralize $diff) from package #($(bundled-leafs)/$(leafs))";
+  prompt $package "Unbundled **$diff.. file$(pluralize $diff) from package #($(staged)/$(changes))";
   echo true;
  fi
 }

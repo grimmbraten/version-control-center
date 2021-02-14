@@ -17,7 +17,7 @@ branch-delete() {
   $(checkout-master);
  fi
 
- local ahead=$(forest-behind $1);
+ local ahead=$(local-ahead-of-master $1);
 
  if ! $(run "git branch -D $1"); then
   #Todo replace "plant" with actual plant name
@@ -26,7 +26,7 @@ branch-delete() {
   return;
  fi  
 
- if $(plant-origin-exists $1); then
+ if $(remote-exists $1); then
   if $(question "Do you want to delete the remote origin?"); then
    if ! $(branch-delete-origin $1); then  
     echo false;
@@ -35,7 +35,7 @@ branch-delete() {
   fi
  fi
 
- prompt $fireIcon "Burned down $(toLower $(plant-name $ahead)) #($breed)";
+ prompt $fire "Burned down $(toLower $(plant-name $ahead)) #($breed)";
  echo true;
 }
 
@@ -54,8 +54,8 @@ branch-delete-origin() {
 
  local ahead=$(packages-ahead-of-master $1);
 
- if ! $(plant-origin-exists $1); then
-  prompt $seeNoEvilIcon $remoteOriginDoesNotExist;
+ if ! $(remote-exists $1); then
+  prompt $telescope $remoteOriginDoesNotExist;
   echo false;
   return;
  fi
@@ -65,6 +65,6 @@ branch-delete-origin() {
   return;
  fi
 
- prompt $fireIcon "Burned down $(toLower $(plant-name $ahead)) #($(plant-breed origin/$1))";
+ prompt $fire "Burned down $(toLower $(plant-name $ahead)) #($(plant-breed origin/$1))";
  echo true;
 }

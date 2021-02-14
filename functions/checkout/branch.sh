@@ -1,3 +1,6 @@
+#TODO: Allow user to checkout branch by passing a search query
+#TODO: Allow user to checkout branch by passing a jira ticket id
+
 checkout() {
  local breed;
  
@@ -7,18 +10,18 @@ checkout() {
   return;
  fi
 
- if $(has-leafs); then
+ if $(has-changes); then
   $(stash-save $(growing-plant));  
  fi
 
- if $(plant-exists $1); then
+ if $(local-exists $1); then
   breed=$(plant-breed $1);
 
   if ! $(run "git checkout $1"); then
    echo false;
    return;
   fi
- elif $(plant-origin-exists $1); then
+ elif $(remote-exists $1); then
   breed=$(plant-breed origin/$1);
 
   if ! $(run "git checkout -b $1 origin/$1"); then
@@ -26,12 +29,12 @@ checkout() {
    return;
   fi
  else
-  prompt $seeNoEvilIcon $branchDoesNotExist;
+  prompt $telescope $branchDoesNotExist;
   echo false;
   return
  fi
 
- local index=$(getSeedIndexByName $1);
+ local index=$(find-stash-by-name $1);
 
  if [ ! -z $index ]; then
   if $(stash-apply $index); then

@@ -5,14 +5,14 @@ commit-undo() {
   return;
  fi
  
- local before=$(bundled-leafs);
+ local before=$(staged);
 
  if ! $(run "git reset --soft HEAD~1"); then
   echo false;
   return;
  fi
 
- local after=$(bundled-leafs);
+ local after=$(staged);
  local undone=$(($after - $before));
  
  $(status-list true);
