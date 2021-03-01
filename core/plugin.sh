@@ -1,1 +1,1 @@
-local namespace="gitlivery";
+local namespace="VC2";
