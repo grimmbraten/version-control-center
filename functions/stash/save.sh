@@ -1,23 +1,27 @@
+# save changes in a named and indexed stash
 stash-save() {
- if ! $(isCalledWithOneArgument $@); then
+ if ! $(oneArguments $@); then
   invalid;
   echo false;
   return;
  fi
  
- if ! $(has-changes); then
-  prompt $telescope "Branch does not have any changes";
+ # abort script if working branch has unhandled changes
+ if ! $(isZero $(changes)); then
+  prompt $construction $WIP;
   echo false;
   return;
  fi
 
+ # store total count of changes
+ local changes=$(changes);
+
+ # save changes in a named stash and assign index
  if ! $(run "git stash save -u $1"); then
   echo false;
   return;
  fi
- 
- local changes=$(changes);
 
- successfully "Stashed *$changes. file$(pluralize $changes)";
+ successfully "Stashed **$changes.. file$(pluralize $changes)";
  echo true;
 }

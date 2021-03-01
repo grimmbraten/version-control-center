@@ -1,5 +1,5 @@
 
-# $1: string (highlight syntax)
+# apply prompt formatting to passed string
 format() {
  local text=$1;
  text=${text//\*\*/$white}
@@ -11,37 +11,35 @@ format() {
  echo ${text//\.\./$base}
 }
 
-# $1: string (text to split)
-# $2: char (delimiter syntax to determine split position)
-# $3: integer (index of what array position to return)
+# return specific part of a string
 split() {
  echo "$1" | cut -d $2 -f$3;
 }
 
-# returns the passed value trimmed from trailing whitespace
+# return string without trailing whitespace
 trim() {
  if [ $1 != "" ]; then
   echo $1 | xargs;
  fi
 }
 
-# returns the passed value in all uppercase
+# return passed string in all uppercase
 toUpper() {
  echo "$1" | tr '[:lower:]' '[:upper:]';
 }
 
-# returns the passed value in all lowercase
+# return passed string in all lowercase
 toLower() {
  echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
-# returns the passed value with the first character capitalized
+# return passed string with first character capitalized
 capitalize() {
  local string=$1;
  echo $(tr '[:lower:]' '[:upper:]' <<< ${string:0:1})${string:1};
 }
 
-# returns an "s" if the passed value does not equal one
+# return "s" if passed number does not equal one
 pluralize() {
  if [ $1 -eq 1 ]; then
   echo "";
@@ -50,9 +48,8 @@ pluralize() {
  fi
 }
 
-# returns a number extracted from the passed value
+# return number extracted from passed string
 parseInt() {
  local string=$1;
  echo "${string//[^0-9]/}";
 }
-

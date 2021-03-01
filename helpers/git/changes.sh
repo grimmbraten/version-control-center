@@ -6,17 +6,17 @@ changes() {
  echo $(($staged + $unstaged));
 }
 
-# returns the total count of staged local changes
+# returns total count of staged local changes
 staged() {
  echo $(trim $(git diff --cached --numstat | wc -l));
 }
 
-# returns the total count of unstaged local changes
+# returns total count of unstaged local changes
 unstaged() {
  echo $(trim $(git ls-files --modified --others --exclude-standard | wc -l));
 }
 
-# returns true if the local branch has any changes
+# returns true if local branch has any changes
 has-changes() {
  local staged=$(staged);
  local unstaged=$(unstaged);
@@ -29,7 +29,7 @@ has-changes() {
  fi
 }
 
-# returns true if the local branch has staged changes
+# returns true if local branch has staged changes
 has-staged() {
  if [ $(staged) -gt 0 ]; then
   echo true;
@@ -38,7 +38,7 @@ has-staged() {
  fi
 }
 
-# returns true if the local branch has unstaged changes
+# returns true if local branch has unstaged changes
 has-unstaged() {
  if [ $(unstaged) -gt 0 ]; then
   echo true;

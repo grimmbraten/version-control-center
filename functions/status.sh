@@ -1,5 +1,6 @@
+# print compact status summary of working branch
 status() {
- if ! $(isCalledWithNoArguments $@); then
+ if ! $(noArguments $@); then
   invalid;
   return;
  fi
@@ -11,8 +12,9 @@ status() {
  prompt $(plant-icon) "$(plant-name) with **$commits.. commit$(pluralize $commits) ##($(unstaged)/$(staged))..";
 }
 
+# print detailed status summary of working branch
 status-detailed() {
- if $(isCalledWithNoArguments $@); then
+ if $(noArguments $@); then
   #TODO, make detailed status custom instead of using default git status command
   #Example, have lines below describing behind/ahead of origin/master etc.
   mention "$(git status)";
@@ -21,6 +23,7 @@ status-detailed() {
  fi
 }
 
+# print list of changed files in working branch
 status-list() {
  if [ $(changes) -eq 0 ]; then
   return;

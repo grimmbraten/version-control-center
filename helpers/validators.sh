@@ -1,4 +1,4 @@
-# returns true if the passed value is isZero
+# return true if passed value is equal to zero
 isZero() {
  if [ $1 -eq 0 ]; then
   echo true;
@@ -7,7 +7,7 @@ isZero() {
  fi
 }
 
-# returns true if the passed value is not a number
+# return true if passed value is not a number
 isNaN() {
  if ! [[ "$1" =~ ^[0-9]+$ ]]; then
   echo true;
@@ -16,7 +16,7 @@ isNaN() {
  fi
 }
 
-# returns true if the first passed value contains the second passed value
+# return true if first passed string contains second passed string
 contains() {
  if [[ $1 == *"$2"* ]]; then
   echo true;
@@ -25,7 +25,7 @@ contains() {
  fi
 }
 
-# returns true if the passed value is empty
+# return true if passed string is empty
 isEmpty() {
  if [ -z $1 ]; then
   echo true;
@@ -34,7 +34,7 @@ isEmpty() {
  fi
 }
 
-# returns true if the passed value contains a full stop
+# return true if passed string contains a full stop
 isFile() {
  if [[ $1 = *.* ]]; then
   echo true;
@@ -43,7 +43,7 @@ isFile() {
  fi
 }
 
-# returns "file" if the passed value contains a full stop, otherwise it returns "folder"
+# return "file" if passed string contains a full stop, otherwise return "folder"
 targetType() {
  if $(isFile $1); then
   echo "file";
@@ -52,7 +52,7 @@ targetType() {
  fi
 }
 
-# returns true if the first passed value is greater than the second passed value
+# return true if first passed number is greater than the second passed number
 greaterThan() {
  if [ $1 -gt $2 ]; then
   echo true;
@@ -61,7 +61,7 @@ greaterThan() {
  fi
 }
 
-# returns true if the first passed value is less than the second passed value
+# return true if first passed number is less than second passed number
 lessThan() {
  if [ $1 -lt $2 ]; then
   echo true;
@@ -71,8 +71,8 @@ lessThan() {
 }
 
 
-# returns true if no values are passed to the function
-isCalledWithNoArguments() {
+# return true if no arguments are passed
+noArguments() {
  if $(isEmpty $1); then
   echo true;
  else
@@ -80,8 +80,8 @@ isCalledWithNoArguments() {
  fi
 }
 
-# returns true if strictly one value is passed to the function
-isCalledWithOneArgument() {
+# return true if one argument is passed
+oneArguments() {
  if ( ! $(isEmpty $1) && $(isEmpty $2) ); then
   echo true;
  else
@@ -89,8 +89,8 @@ isCalledWithOneArgument() {
  fi
 }
 
-# returns true if strictly two values are passed to the function
-isCalledWithTwoArguments() {
+# return true if two arguments are passed
+twoArguments() {
  if ( ! $(isEmpty $1) && ! $(isEmpty $2) && $(isEmpty $3) ); then
   echo true;
  else
@@ -98,8 +98,8 @@ isCalledWithTwoArguments() {
  fi
 }
 
-# returns true if one or two values are passed to the function
-isCalledWithOneOrTwoArguments() {
+# return true if three arguments are passed
+threeArguments() {
  if ( ! $(isEmpty $1) && ! $(isEmpty $3) ); then
   echo false;
  else

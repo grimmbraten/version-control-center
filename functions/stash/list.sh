@@ -1,5 +1,6 @@
+# list all local stashes
 stash() {
- if $(isCalledWithNoArguments $@); then
+ if $(noArguments $@); then
   git stash list;
  else
   invalid;

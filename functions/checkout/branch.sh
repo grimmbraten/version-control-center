@@ -1,47 +1,55 @@
 #TODO: Allow user to checkout branch by passing a search query
 #TODO: Allow user to checkout branch by passing a jira ticket id
 
+# checkout passed branch from local or remote origin
 checkout() {
- local breed;
+ local hash;
  
- if ! $(isCalledWithOneArgument $@); then
+ # check that function was called with strictly one argument
+ if ! $(oneArguments $@); then
   invalid;
   echo false;
   return;
  fi
 
+ # check if current branch has any unhandled changes
  if $(has-changes); then
-  $(stash-save $(growing-plant));  
+  $(stash-save $(working-branch));  
  fi
 
- if $(local-exists $1); then
-  breed=$(plant-breed $1);
+ # locate where passed branch exists
+ if $(local-branch-exists $1); then
+  hash=$(branch-hash $1);
 
+  # checkout branch found on local machine
   if ! $(run "git checkout $1"); then
    echo false;
    return;
   fi
- elif $(remote-exists $1); then
-  breed=$(plant-breed origin/$1);
+ elif $(remote-branch-exists $1); then
+  hash=$(branch-hash origin/$1);
 
+ # checkout and create a local branch for the branch found on remote origin
   if ! $(run "git checkout -b $1 origin/$1"); then
    echo false;
    return;
   fi
  else
-  prompt $telescope $branchDoesNotExist;
+  prompt $telescope $BDNE;
   echo false;
   return
  fi
 
+ # check if any automatic stashes exists for the checked out branch
  local index=$(find-stash-by-name $1);
 
+ # apply and drop potentially found stash for branch
  if [ ! -z $index ]; then
   if $(stash-apply $index); then
    $(stash-drop $index);
   fi
  fi
 
- prompt $(plant-icon $(packages-ahead-of-master $breed)) "Planted $(plant-name $(packages-ahead-of-master $toIdentity)) #($toIdentity)";
+ prompt $(plant-icon $(locale-ahead-of-master $breed)) "Planted $(plant-name $(locale-ahead-of-master $(working-branch))) ##($(working-branch))..";
  echo true;
 }

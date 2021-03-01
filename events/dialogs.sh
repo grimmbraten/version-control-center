@@ -17,10 +17,10 @@ question() {
 # $1: string (message describing intended action)
 confirmIdentity() {
  if [ ! -z $1 ]; then
-  local breed=$(plant-breed);
+  local breed=$(branch-hash);
 
   prompt $compass "You are about to $1";
-  prompt $construction "Please enter *$breed. to confirm this action";
+  prompt $construction "Please enter **$breed.. to confirm this action";
   local input=$(bash -c 'read -e -p "" tmp; echo $tmp')
 
   if [ "$input" = "$breed" ]; then

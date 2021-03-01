@@ -1,41 +1,56 @@
+# rename working branch on local and/or remote origin
 branch-rename() {
- if ! $(isCalledWithOneArgument $@); then
+ if ! $(oneArguments $@); then
   invalid;
   echo false;
   return;
  fi
 
- if $(local-exists $1); then
-  #TODO Get plant icon and name to prompt instead
-  prompt $compass $branchExists;
+ if $(protected-branch $1); then
   echo false;
   return;
  fi
 
- local plant=$(growing-plant);
+ # check if passed name is available on local machine
+ if $(local-branch-exists $1); then
+  prompt $(plant-icon $1) $BE;
+  echo false;
+  return;
+ fi
 
+ # check if passed name is available on remote origin
+ if $(remote-branch-exists $1); then
+  prompt $(plant-icon $1) $BE;
+  echo false;
+  return;
+ fi
+
+ # store name current working branch
+ local name=$(working-branch);
+
+ # rename working branch on local machine
  if ! $(run "git branch -m $1"); then
-  #Todo replace "plant" with actual plant name
-  error "Failed to rename plant";
+  error "Failed to rename $name";
   echo false;
   return;
  fi
 
- if $(remote-exists $plant); then
-  if $(question "Do you want to delete the remote origin?"); then
+ if $(remote-branch-exists $name); then
+  if $(question "Do you want to rename the remote origin?"); then
+   # push renamed branch to remote origin
    if ! $(push-upstream); then    
     echo false;
     return;
    fi
   
-   if ! $(branch-delete-origin $plant); then    
+   # delete remote old branch
+   if ! $(branch-delete-origin $name); then    
     echo false;
     return;
    fi
   fi
  fi
  
- #Todo replace "plant" with actual plant name
- successfully "Renamed plant #($(plant-breed))";
+ successfully "Renamed $name ##($(branch-hash))..";
  echo true;
 }

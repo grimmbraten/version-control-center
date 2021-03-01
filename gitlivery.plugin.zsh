@@ -1,16 +1,14 @@
 if [ -d .git ]; then
  local root=$(dirname "$0");
 
- . $root/helpers/bundler.sh;
+ . $root/helpers;
 
- . $root/global/bundler.sh;
+ . $root/global;
 
- . $root/events/bundler.sh;
+ . $root/events;
 
- . $root/core/bundler.sh;
- . $root/functions/bundler.sh;
+ . $root/core;
+ . $root/functions;
 
- . $root/commands/abbreviations.sh
+ . $root/commands;
 fi
-
-#TODO: This startup file should be used to load settings and other plugin related customizations

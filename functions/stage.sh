@@ -1,13 +1,16 @@
+# stage files from passed folder/file
 stage() {
- if ! $(isCalledWithOneArgument $@); then
+ if ! $(oneArguments $@); then
   invalid;
   echo false;
   return;
  fi
 
- local diff;
+ local staged;
  local before=$(unstaged);
 
+
+ # stage files from passed path/file
  if ! $(run "git add $1"); then
   echo false;
   return;
@@ -16,24 +19,25 @@ stage() {
  local after=$(unstaged);
  
  if [ $1 != . ]; then
-  diff=$(($before - $after));
+  staged=$(($before - $after));
  else
-  diff=$before;
+  staged=$before;
  fi
  
- if $(isZero $diff); then
+ # prompt user that no files were staged
+ if $(isZero $staged); then
   prompt $telescope "Could not find $(targetType $target)";
   echo false;
  else
   $(status-list true);
-  #TODO: Change "package" to bundle branches / sprouts? depending on commit sice
-  prompt $package "Bundled **$diff.. file$(pluralize $diff) to package #($(staged)/$(changes))";
+  prompt $package "Bundled **$staged.. file$(pluralize $staged) to package ##($(staged)/$(changes))..";
   echo true;
  fi 
 }
 
+# stage all changed files
 stage-all() {
- if $(isCalledWithNoArguments $@); then
+ if $(noArguments $@); then
   $(stage .);
  else
   invalid;

@@ -1,37 +1,35 @@
+# pull changes from remote origin
 pull() {
- if ! $(isCalledWithNoArguments $@); then
+ if ! $(noArguments $@); then
   invalid;
   echo false;
   return;
  fi
 
- if ! $(remote-exists); then
-  prompt $leafs $remoteOriginDoesNotExist;
+ # check if working branch has remote origin
+ if ! $(remote-branch-exists); then
+  prompt $leafs $ROM;
   echo false;
   return;
  fi
 
  local behind=$(behind-local);
 
+ # check if local branch is up to date with remote origin
  if $(isZero $behind); then
-  prompt $(plant-icon) "$(plant-name) is already $upToDateWithRemote $mutedRepoUrl";
+  prompt $(plant-icon) "$(plant-name) is already $upToDateWithRemote $URL";
   echo false;
   return;
  fi 
 
  prompt $(getDeliveryIcon $behind) "Receiving **$behind.. plant anatomy and morphology update$(pluralize $behind)";
 
- if ! $(run "git pull origin $(growing-plant)"); then
+ # pull down remote changes to working branch
+ if ! $(run "git pull origin $(working-branch)"); then
   echo false;
   return;
  fi
 
- if $(local-behind-remote); then
-  error "Failed to update plant$(pluralize $behind)";
-  echo false;
-  return;
- fi
-
- prompt $(plant-icon) "$(plant-name) is now $upToDateWithRemote $mutedRepoUrl";
+ prompt $(plant-icon) "$(plant-name) is now $upToDateWithRemote $URL";
  echo true;
 }

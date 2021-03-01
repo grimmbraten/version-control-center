@@ -1,39 +1,37 @@
+# merge passed branch with working branch
 merge() {
- local target;
-
- if ! $(isCalledWithOneArgument $@); then
+ if ! $(oneArguments $@); then
   invalid;
   echo false;
   return;
  fi
 
- if $(has-changes); then
-  prompt $construction $hasWorkInProgress;
+ # abort script if working branch has unhandled changes
+ if ! $(isZero $(changes)); then
+  prompt $construction $WIP;
   echo false;
   return;
  fi
 
- if $(local-exists $1); then
-  target=$1;
- elif $(remote-exists $1); then
-  target="origin/$1";
- else
-  prompt $telescope $branchDoesNotExist;
+ if ( ! $(local-branch-exists $1) && ! $(remote-branch-exists $1) ); then
+  prompt $telescope $BDNE;
   echo false;
   return
  fi
 
- if [ $(behind-local $target) -eq 0 ]; then
-  successfully "Already *up to date. with $target #($(plant-breed $target)";
+ # TODO This function is deprecated, look over again
+ if [ $(local-behind-branch $1) -eq 0 ]; then
+  successfully "Already **up to date.. with $target ##($(branch-hash $target)..";
   echo false;
   return;
  fi
 
- if ! $(run "git merge $target"); then
+ # merge passed branch into working branch
+ if ! $(run "git merge $1"); then
   echo false;
   return;
  fi
  
- successfully "Merged #($(plant-breed $target))";
+ successfully "Merged ##($(branch-hash $1))..";
  echo true;
 }

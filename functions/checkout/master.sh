@@ -1,5 +1,6 @@
+# checkout local master branch
 checkout-master() {
- if $(isCalledWithNoArguments $@); then
+ if $(noArguments $@); then
   $(checkout master);
  else
   invalid;

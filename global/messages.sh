@@ -1,18 +1,14 @@
+# branch does not exist
+local BDNE="branch does not exist";
 
-# Remote origin texts
+# remote origin exists
+local ROE="branch already exists";
 
-local remoteOriginDoesNotExist="$(plant-name) does not exist in $(repository-name)";
-local remoteOriginAlreadyExists="$(plant-name) already exists in $(repository-name)";
+# branch exists
+local BE="branch already exists";
 
-# Local branch texts
+# has work in progress
+local WIP="branch has work in progress";
 
-local branchExists="$(plant-name) already exists";
-local branchDoesNotExist="$(plant-name) does not exist";
-
-# Changes texts
-
-local hasWorkInProgress="$(plant-name) has work in progress";
-
-local upToDateWithRemote="**up to date.. with its version in $(repository-name)";
-local mutedRepoUrl="##($(repository-url))..";
-
+# repository url
+local URL="##($(repository-url))..";

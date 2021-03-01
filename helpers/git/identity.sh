@@ -1,19 +1,10 @@
-# returns the name of the active branch
-growing-plant() {
- if [ -z $1 ]; then
-  echo $(git branch --show-current);
- else
-  echo $1;
- fi 
+# returns name of the working branch
+working-branch() {
+ echo $(git branch --show-current);
 }
 
-# returns the unique id of the remote master branch
-forest-breed() {
- echo $(git rev-parse --short origin/master);
-}
-
-# returns the unique id of the active/passed locale branch
-plant-breed() {
+# returns branch hash for working/passed locale branch
+branch-hash() {
  if [ -z $1 ]; then
   echo $(git rev-parse --short HEAD);
  else
@@ -21,7 +12,16 @@ plant-breed() {
  fi
 }
 
-# returns the unique id of the remote active branch
-plant-origin-breed() {
- echo $(git rev-parse --short origin/$(growing-plant));
+# returns branch hash for working/passed remote branch
+remote-branch-hash() {
+ if [ -z $1 ]; then
+  echo $(git rev-parse --short origin/$(working-branch));
+ else
+  echo $(git rev-parse --short origin/$1);
+ fi
+}
+
+# returns branch hash for remote master branch
+repository-hash() {
+ echo $(git rev-parse --short origin/master);
 }
